@@ -1,23 +1,31 @@
-import { Sketeton } from "./editor-skeleton";
+import { Skeleton } from "./editor-skeleton";
+import { IPublicTypeWidgetBaseConfig } from "./types";
 import { WidgetContainer } from "./widget-container";
 
-export interface IArea<C,T>{
-    add(config:C):T;
+export interface IArea<C, T> {
+    add(config: T): T;
 }
 export interface IWidget {
-    name:string
+    readonly name: string,
+    readonly skeleton: Skeleton;
 }
-export interface IPublicTypeWidgetBaseConfig{
-    
+export interface WidgetConfig extends IPublicTypeWidgetBaseConfig {
+    type: 'Widget';
+    content?: object
 }
-export class Area<C extends IPublicTypeWidgetBaseConfig = any,T extends IWidget = IWidget > implements IArea<C,T>{
-    readonly container:WidgetContainer<T>
-    constructor(readonly skeleton:Sketeton,readonly name:string, handle:(item:T)=>T){
-        this.container = Sketeton.createContainer(name,handle)
+export class Widget implements IWidget {
+    readonly name: string;
+    constructor(readonly skeleton: Skeleton, readonly config: WidgetConfig) {
+        const { name } = config
+        this.name = name
     }
-    add(config:C):T{
-        // return this.container.add(confis)
-        return 
+}
+export class Area<C extends IPublicTypeWidgetBaseConfig = any, T extends IWidget = IWidget> implements IArea<C, T>{
+    readonly container: WidgetContainer<T>
+    constructor(readonly skeleton: Skeleton, readonly name: string, handle: (item: T) => T) {
+        this.container = skeleton.createContainer(name, handle)
     }
-  
+    add(config: T): T {
+        return this.container.add(config)
+    }
 }
