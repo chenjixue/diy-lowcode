@@ -20,12 +20,15 @@ export class Widget implements IWidget {
         this.name = name
     }
 }
-export class Area<C extends IPublicTypeWidgetBaseConfig = any, T extends IWidget = IWidget> implements IArea<C, T>{
+export class Area<C extends IPublicTypeWidgetBaseConfig = any, T extends IWidget = IWidget> implements IArea<C, T> {
     readonly container: WidgetContainer<T>
     constructor(readonly skeleton: Skeleton, readonly name: string, handle: (item: T) => T) {
         this.container = skeleton.createContainer(name, handle)
     }
     add(config: T): T {
         return this.container.add(config)
+    }
+    isEmpty(): boolean {
+        return this.container.items.length < 1;
     }
 }

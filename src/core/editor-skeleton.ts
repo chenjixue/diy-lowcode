@@ -1,4 +1,5 @@
 import { IWidget, Area, Widget, WidgetConfig } from "@/core/area"
+import { isValidElement } from 'react';
 import { WidgetContainer } from "./widget-container";
 import { IPublicTypeWidgetBaseConfig } from "./types";
 import { PanelDock } from "./panel-dock";
@@ -34,12 +35,15 @@ export function isPanelDockConfig(obj: any): obj is PanelDockConfig {
 export function isDividerConfig(obj: any): obj is DividerConfig {
     return obj && obj.type === 'Divider';
 }
+
 export interface PanelDockConfig extends IDockBaseConfig {
     type: 'PanelDock';
     panelName?: string;
     content?: object
 }
-
+export function isObject(value: any): value is Record<string, unknown> {
+    return value !== null && typeof value === 'object';
+}
 export class Skeleton {
     readonly leftArea;
     constructor() {
@@ -48,8 +52,28 @@ export class Skeleton {
         })
     };
     private parseConfig(config: IPublicTypeWidgetBaseConfig) {
+        if (config.parsed) {
+            return config;
+        }
         const { content, ...restConfig } = config;
+        if (content) {
+            if (isObject(content) && !isValidElement(content)) {
+                Object.keys(content).forEach((key) => {
+                    if (/props$/i.test(key) && restConfig[key]) {
+                        restConfig[key] = {
+                            ...restConfig[key],
+                            ...content[key],
+                        };
+                    } else {
+                        restConfig[key] = content[key];
+                    }
+                });
+            } else {
+                restConfig.content = content;
+            }
+        }
         restConfig.pluginKey = restConfig.name;
+        restConfig.parsed = true;
         return restConfig;
 
     }
@@ -86,5 +110,51 @@ export class Skeleton {
     createContainer<T extends IWidget>(name: string, handle: (item: T) => T) {
         const container = new WidgetContainer(name, handle)
         return container
+    }
+    add(config: IPublicTypeSkeletonConfig) {
+        const parsedConfig = {
+            ...this.parseConfig(config),
+        };
+        let { area } = parsedConfig;
+        if (!area) {
+            if (parsedConfig.type === 'Panel') {
+                area = 'leftFloatArea';
+            } else if (parsedConfig.type === 'Widget') {
+                area = 'mainArea';
+            } else {
+                area = 'leftArea';
+            }
+        }
+        switch (area) {
+            case 'leftArea':
+            case 'left':
+                return this.leftArea.add(parsedConfig as PanelDockConfig);
+            // case 'rightArea':
+            // case 'right':
+            //     return this.rightArea.add(parsedConfig as PanelConfig);
+            // case 'topArea':
+            // case 'top':
+            //     return this.topArea.add(parsedConfig as PanelDockConfig);
+            // case 'subTopArea':
+            //     return this.subTopArea.add(parsedConfig as PanelDockConfig);
+            // case 'toolbar':
+            //     return this.toolbar.add(parsedConfig as PanelDockConfig);
+            // case 'mainArea':
+            // case 'main':
+            // case 'center':
+            // case 'centerArea':
+            //     return this.mainArea.add(parsedConfig as PanelConfig);
+            // case 'bottomArea':
+            // case 'bottom':
+            //     return this.bottomArea.add(parsedConfig as PanelConfig);
+            // case 'leftFixedArea':
+            //     return this.leftFixedArea.add(parsedConfig as PanelConfig);
+            // case 'leftFloatArea':
+            //     return this.leftFloatArea.add(parsedConfig as PanelConfig);
+            // case 'stages':
+            //     return this.stages.add(parsedConfig as StageConfig);
+            default:
+            // do nothing
+        }
     }
 }

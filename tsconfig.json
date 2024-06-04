@@ -8,6 +8,7 @@
       "DOM.Iterable"
     ],
     "baseUrl": "./",
+    "strictPropertyInitialization": false,
     "module": "ESNext",
     "skipLibCheck": true,
     /* Bundler mode */

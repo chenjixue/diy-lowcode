@@ -10,21 +10,28 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "classnames": "^2.5.1",
+    "events": "^3.3.0",
+    "lodash": "^4.17.21",
     "path": "^0.12.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "store": "^2.0.12",
     "strict-event-emitter-types": "^2.0.0"
   },
   "devDependencies": {
+    "@types/lodash": "^4.17.1",
     "@types/node": "^20.11.28",
     "@types/react": "^18.2.64",
     "@types/react-dom": "^18.2.21",
+    "@types/store": "^2.0.5",
     "@typescript-eslint/eslint-plugin": "^7.1.1",
     "@typescript-eslint/parser": "^7.1.1",
     "@vitejs/plugin-react": "^4.2.1",
     "eslint": "^8.57.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
+    "less": "^4.2.0",
     "typescript": "^5.2.2",
     "vite": "^5.1.6"
   }
