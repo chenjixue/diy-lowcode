@@ -9,4 +9,4 @@
 //   </React.StrictMode>,
 // )
 import {init} from "@/core/engine-core"
-init(document.getElementById('root')!)
+init(document.querySelector('body')!)

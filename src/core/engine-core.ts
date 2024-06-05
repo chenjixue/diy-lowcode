@@ -23,7 +23,6 @@ async function registryInnerPlugin(designer: any, editor: any, plugins: Plugins)
   await plugins.register(defaultPanelRegistry(editor));
 }
 // const editor = new Editor();
-debugger
 const innerSkeleton = new InnerSkeleton();
 
 // const designer = new Designer({ editor, shellModelFactory });
@@ -47,6 +46,7 @@ export async function init(
   ReactDOM.createRoot(container!).render(
     createElement(Workbench, {
       skeleton: innerSkeleton,
+      className: 'engine-main',
     })
   )
 }

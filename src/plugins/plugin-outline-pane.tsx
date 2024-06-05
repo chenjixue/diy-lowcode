@@ -1,3 +1,5 @@
+import { IconOutline } from "@/core/componets/icons/outline";
+
 export const OutlinePlugin = (ctx: IPublicModelPluginContext, options: any) => {
   const { skeleton, config, common, event, canvas, project } = ctx;
   ctx.extraTitle = options && options['extraTitle'];
@@ -13,6 +15,13 @@ export const OutlinePlugin = (ctx: IPublicModelPluginContext, options: any) => {
         name: 'outlinePane',
         type: 'PanelDock',
         index: -1,
+        content: {
+          // name: MasterPaneName,
+          props: {
+            icon: IconOutline,
+            description: "点击展开树",
+          },
+        },
       });
     },
   };

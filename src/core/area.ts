@@ -21,6 +21,10 @@ export class Widget implements IWidget {
     }
 }
 export class Area<C extends IPublicTypeWidgetBaseConfig = any, T extends IWidget = IWidget> implements IArea<C, T> {
+    private _visible = true;
+    get visible() {
+        return this._visible;
+      }
     readonly container: WidgetContainer<T>
     constructor(readonly skeleton: Skeleton, readonly name: string, handle: (item: T) => T) {
         this.container = skeleton.createContainer(name, handle)

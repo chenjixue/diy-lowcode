@@ -5,7 +5,6 @@ import { Area } from '@/core/area';
 export default class LeftArea extends Component<{ area: Area }> {
   render() {
     const { area } = this.props;
-    debugger
     if (area.isEmpty()) {
       return null;
     }
