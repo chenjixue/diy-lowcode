@@ -119,12 +119,7 @@ export interface IPluginPreferenceMananger {
 /**
  * 所有可能的停靠位置
  */
-export type IPublicTypeWidgetConfigArea = 'leftArea' | 'left' | 'rightArea' |
-    'right' | 'topArea' | 'subTopArea' | 'top' |
-    'toolbar' | 'mainArea' | 'main' |
-    'center' | 'centerArea' | 'bottomArea' |
-    'bottom' | 'leftFixedArea' |
-    'leftFloatArea' | 'stages';
+
 
 export interface IPublicTypeWidgetBaseConfig {
     [extra: string]: any;
@@ -141,135 +136,10 @@ export interface IPublicTypeWidgetBaseConfig {
     content?: any;
     contentProps?: Record<string, any>;
 }
-export interface IPublicTypePanelDockPanelProps {
-    [key: string]: any;
 
-    /** 是否隐藏面板顶部条 */
-    hideTitleBar?: boolean;
 
-    width?: number;
-
-    height?: number;
-
-    maxWidth?: number;
-
-    maxHeight?: number;
-
-    area?: IPublicTypeWidgetConfigArea;
-}
-
-export interface IPublicTypePanelDockConfig extends IPublicTypeWidgetBaseConfig {
-    type: 'PanelDock';
-    panelProps?: IPublicTypePanelDockPanelProps;
-}
 export type IPublicTypeSkeletonConfig = IPublicTypePanelDockConfig | IPublicTypeWidgetBaseConfig;
-export interface IPublicApiSkeleton {
 
-    /**
-     * 增加一个面板实例
-     * add a new panel
-     * @param config
-     * @param extraConfig
-     * @returns
-     */
-    add(config: IPublicTypeSkeletonConfig, extraConfig?: Record<string, any>): any;
-
-    /**
-     * 移除一个面板实例
-     * remove a panel
-     * @param config
-     * @returns
-     */
-    remove(config: IPublicTypeSkeletonConfig): number | undefined;
-
-    /**
-     * 展示指定 Panel 实例
-     * show panel by name
-     * @param name
-     */
-    showPanel(name: string): void;
-
-    /**
-     * 隐藏面板
-     * hide panel by name
-     * @param name
-     */
-    hidePanel(name: string): void;
-
-    /**
-     * 展示指定 Widget 实例
-     * show widget by name
-     * @param name
-     */
-    showWidget(name: string): void;
-
-    /**
-     * 将 widget 启用
-     * enable widget by name
-     * @param name
-     */
-    enableWidget(name: string): void;
-
-    /**
-     * 隐藏指定 widget 实例
-     * hide widget by name
-     * @param name
-     */
-    hideWidget(name: string): void;
-
-    /**
-     * 将 widget 禁用掉，禁用后，所有鼠标事件都会被禁止掉。
-     * disable widget，and make it not responding any click event.
-     * @param name
-     */
-    disableWidget(name: string): void;
-
-    /**
-     * 显示某个 Area
-     * show area
-     * @param areaName name of area
-     */
-    showArea(areaName: string): void;
-
-    /**
-     * 隐藏某个 Area
-     * hide area
-     * @param areaName name of area
-     */
-    hideArea(areaName: string): void;
-
-    /**
-     * 监听 Panel 实例显示事件
-     * set callback for panel shown event
-     * @param listener
-     * @returns
-     */
-    onShowPanel(listener: (...args: any[]) => void): IPublicTypeDisposable;
-
-    /**
-     * 监听 Panel 实例隐藏事件
-     * set callback for panel hidden event
-     * @param listener
-     * @returns
-     */
-    onHidePanel(listener: (...args: any[]) => void): IPublicTypeDisposable;
-
-    /**
-     * 监听 Widget 显示事件
-     * set callback for widget shown event
-     * @param listener
-     * @returns
-     */
-    onShowWidget(listener: (...args: any[]) => void): IPublicTypeDisposable;
-
-    /**
-     * 监听 Widget 隐藏事件
-     * set callback for widget hidden event
-     * @param listener
-     * @returns
-     */
-    onHideWidget(listener: (...args: any[]) => void): IPublicTypeDisposable;
-}
 
 export type IPublicTypeHotkeyCallback = (e: KeyboardEvent, combo?: string) => any | false;
 
@@ -899,37 +769,7 @@ export interface IPublicTypeEditorRegisterOptions {
      */
     autoNew?: boolean;
 }
-export interface IPublicTypeDisposable {
-    (): void;
-}
-export interface IPublicApiEvent {
 
-    /**
-     * 监听事件
-     * add monitor to a event
-     * @param event 事件名称
-     * @param listener 事件回调
-     */
-    on(event: string, listener: (...args: any[]) => void): IPublicTypeDisposable;
-
-
-    /**
-     * 取消监听事件
-     * cancel a monitor from a event
-     * @param event 事件名称
-     * @param listener 事件回调
-     */
-    off(event: string, listener: (...args: any[]) => void): void;
-
-    /**
-     * 触发事件
-     * emit a message fot a event
-     * @param event 事件名称
-     * @param args 事件参数
-     * @returns
-     */
-    emit(event: string, ...args: any[]): void;
-}
 export interface IPublicModelEditor extends StrictEventEmitter<EventEmitter, EventConfig> {
     get: <T = undefined, KeyOrType = any>(
         keyOrType: KeyOrType,
@@ -4483,19 +4323,7 @@ export interface IPublicModelClipboard {
     ): void;
 }
 export interface ILowCodePluginContextPrivate {
-    set hotkey(hotkey: IPublicApiHotkey);
-    set project(project: IPublicApiProject);
     set skeleton(skeleton: IPublicApiSkeleton);
-    set setters(setters: IPublicApiSetters);
-    set material(material: IPublicApiMaterial);
-    set event(event: IPublicApiEvent);
-    set config(config: IPublicModelEngineConfig);
-    set common(common: IPublicApiCommon);
-    set plugins(plugins: IPublicApiPlugins);
-    set logger(plugins: IPublicApiLogger);
-    set pluginEvent(event: IPublicApiEvent);
-    set canvas(canvas: IPublicApiCanvas);
-    set workspace(workspace: IPublicApiWorkspace);
 }
 export interface IPublicModelResource {
     get title(): string | undefined;
@@ -5566,35 +5394,7 @@ export default class LowCodePluginContext implements IPublicModelPluginContext, 
     ) {
         const { pluginName = 'anonymous', meta = {} } = options;
         contextApiAssembler.assembleApis(this, pluginName, meta);
-        // this.pluginEvent = createModuleEventBus(pluginName, 200);
-        // const enhancePluginContextHook = engineConfig.get('enhancePluginContextHook');
-        // if (enhancePluginContextHook) {
-        //     enhancePluginContextHook(this);
-        // }
     }
-
-    // setPreference(
-    //     pluginName: string,
-    //     preferenceDeclaration: IPublicTypePluginDeclaration,
-    // ): void {
-    //     const getPreferenceValue = (
-    //         key: string,
-    //         defaultValue?: IPublicTypePreferenceValueType,
-    //     ): IPublicTypePreferenceValueType | undefined => {
-    //         if (!isValidPreferenceKey(key, preferenceDeclaration)) {
-    //             return undefined;
-    //         }
-    //         const pluginPreference = this.plugins.getPluginPreference(pluginName) || {};
-    //         if (pluginPreference[key] === undefined || pluginPreference[key] === null) {
-    //             return defaultValue;
-    //         }
-    //         return pluginPreference[key];
-    //     };
-
-    //     this.preference = {
-    //         getPreferenceValue,
-    //     };
-    // }
 }
 
 export type ILowCodePluginManager = ILowCodePluginManagerCore & ILowCodePluginManagerPluginAccessor;
@@ -5751,10 +5551,9 @@ export class LowCodePluginManager implements ILowCodePluginManager {
             pluginNames.push(plugin.name);
             pluginObj[plugin.name] = plugin;
         });
+        // 循环配置得到result
         const { missingTasks, sequence } = sequencify(pluginObj, pluginNames);
         invariant(!missingTasks.length, 'plugin dependency missing', missingTasks);
-        logger.log('load plugin sequence:', sequence);
-
         for (const pluginName of sequence) {
             try {
                 await this.pluginsMap.get(pluginName)!.init();
@@ -5767,15 +5566,7 @@ export class LowCodePluginManager implements ILowCodePluginManager {
         }
     }
 
-    async destroy() {
-        for (const plugin of this.plugins) {
-            await plugin.destroy();
-        }
-    }
 
-    get size() {
-        return this.pluginsMap.size;
-    }
 
     getPluginPreference(pluginName: string): Record<string, IPublicTypePreferenceValueType> | null | undefined {
         if (!this.pluginPreference) {
@@ -5784,30 +5575,4 @@ export class LowCodePluginManager implements ILowCodePluginManager {
         return this.pluginPreference.get(pluginName);
     }
 
-    toProxy() {
-        return new Proxy(this, {
-            get(target, prop, receiver) {
-                if (target.pluginsMap.has(prop as string)) {
-                    // 禁用态的插件，直接返回 undefined
-                    if (target.pluginsMap.get(prop as string)!.disabled) {
-                        return undefined;
-                    }
-                    return target.pluginsMap.get(prop as string)?.toProxy();
-                }
-                return Reflect.get(target, prop, receiver);
-            },
-        });
-    }
-
-    /* istanbul ignore next */
-    setDisabled(pluginName: string, flag = true) {
-        logger.warn(`plugin:${pluginName} has been set disable:${flag}`);
-        this.pluginsMap.get(pluginName)?.setDisabled(flag);
-    }
-
-    async dispose() {
-        await this.destroy();
-        this.plugins = [];
-        this.pluginsMap.clear();
-    }
 }

@@ -1,42 +1,33 @@
-import { Component, isValidElement, ReactNode } from 'react';
+import { Component, isValidElement, ReactNode,ReactElement, ComponentType  } from 'react';
 import classNames from 'classnames';
 import { createIcon } from "./create-icon";
-// import { IPublicTypeTitleContent, IPublicTypeI18nData } from '@alilc/lowcode-types';
-// import { intl } from '../../intl';
-// import { Tip } from '../tip';
 import './title.less';
-import { debug } from 'console';
-
-/**
- * 根据 keywords 将 label 分割成文字片段
- * 示例：title = '自定义页面布局'，keywords = '页面'，返回结果为 ['自定义', '页面', '布局']
- * @param label title
- * @param keywords 关键字
- * @returns 文字片段列表
- */
- function splitLabelByKeywords(label: string, keywords: string): string[] {
-  const len = keywords.length;
-  const fragments = [];
-  let str = label;
-
-  while (str.length > 0) {
-    const index = str.indexOf(keywords);
-
-    if (index === 0) {
-      fragments.push(keywords);
-      str = str.slice(len);
-    } else if (index < 0) {
-      fragments.push(str);
-      str = '';
-    } else {
-      fragments.push(str.slice(0, index));
-      str = str.slice(index);
-    }
-  }
-
-  return fragments;
+export interface IPublicTypeIconConfig {
+  type: string;
+  size?: number | 'small' | 'xxs' | 'xs' | 'medium' | 'large' | 'xl' | 'xxl' | 'xxxl' | 'inherit';
+  className?: string;
+}
+export interface IPublicTypeTitleConfig {
+  /**
+   * 文字描述
+   */
+  label?:  ReactNode;
+  /**
+   * 文档链接，暂未实现
+   */
+  docUrl?: string;
+  /**
+   * 图标
+   */
+  icon?: IPublicTypeIconType;
+  /**
+   * CSS 类
+   */
+  className?: string;
 }
 
+export type IPublicTypeIconType = string | ReactElement | ComponentType<any> | IPublicTypeIconConfig;
+export type IPublicTypeTitleContent = string | ReactElement | IPublicTypeTitleConfig;
 export class Title extends Component<{
   title: IPublicTypeTitleContent;
   className?: string;
@@ -60,35 +51,7 @@ export class Title extends Component<{
     // TODO: 操作交互冲突，目前 mixedSetter 仅有 2 个 setter 注册时用到了 onClick
     onClick && onClick(e);
   }
-
-  // renderLabel = (label: string | IPublicTypeI18nData | ReactNode) => {
-  //   let { match, keywords } = this.props;
-
-  //   if (!label) {
-  //     return null;
-  //   }
-
-  //   const intlLabel = intl(label);
-
-  //   if (typeof intlLabel !== 'string') {
-  //     return <span className="lc-title-txt">{intlLabel}</span>;
-  //   }
-
-  //   let labelToRender: ReactNode = intlLabel;
-
-  //   if (match && keywords) {
-  //     const fragments = splitLabelByKeywords(intlLabel as string, keywords);
-
-  //     labelToRender = fragments.map(f => <span style={{ color: f === keywords ? 'red' : 'inherit' }}>{f}</span>);
-  //   }
-
-  //   return (
-  //     <span className="lc-title-txt">{labelToRender}</span>
-  //   );
-  // };
-
   render() {
-    debugger
     // eslint-disable-next-line prefer-const
     let { title, className } = this.props;
     if (title == null) {
@@ -104,18 +67,6 @@ export class Title extends Component<{
     const icon = title.icon ? createIcon(title.icon, { size: 20 }) : null;
 
     let tip: any = null;
-    // if (title.tip) {
-    //   if (isValidElement(title.tip) && title.tip.type === Tip) {
-    //     tip = title.tip;
-    //   } else {
-    //     const tipProps =
-    //       typeof title.tip === 'object' && !(isValidElement(title.tip))
-    //         ? title.tip
-    //         : { children: title.tip };
-    //     tip = <Tip {...tipProps} />;
-    //   }
-    // }
-
     return (
       <span
         className={classNames('lc-title', className, title.className, {

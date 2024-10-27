@@ -51,6 +51,7 @@ export function DockView({ title, icon, description, size, className, onClick })
         <Title title={composeTitle(title, icon, description)} className={classNames('lc-dock', className, {
             [`lc-dock-${size}`]: size,
         })}
+        onClick={onClick}
         />
     );
 }
@@ -136,10 +137,10 @@ export class PanelDockView extends Component<DockProps & { dock: PanelDock }> {
             className: classNames(className, {
               actived: dock.actived,
             }),
-            // onClick: () => {
-            //   onClick && onClick();
-            //   dock.togglePanel();
-            // },
+            onClick: () => {
+              onClick && onClick();
+              dock.togglePanel();
+            },
           });
     }
 }

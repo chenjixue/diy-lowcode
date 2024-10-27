@@ -4,7 +4,7 @@ import { WidgetContainer } from "./widget-container";
 import { IPublicTypeWidgetBaseConfig } from "./types";
 import { PanelDock } from "./panel-dock";
 import { Dock } from "./dock";
-import { Panel } from "./pane";
+import { isPanel, Panel } from "./pane";
 export interface DockConfig extends IDockBaseConfig {
     type: 'Dock';
     content?: Object
@@ -44,12 +44,27 @@ export interface PanelDockConfig extends IDockBaseConfig {
 export function isObject(value: any): value is Record<string, unknown> {
     return value !== null && typeof value === 'object';
 }
+
+
 export class Skeleton {
     readonly leftArea;
+    readonly leftFloatArea;
+    private panels = new Map<string, Panel>();
     constructor() {
         this.leftArea = new Area(this, "leftArea", (config) => {
             return this.createWidget(config)
         })
+        this.leftFloatArea = new Area(
+            this,
+            'leftFloatArea',
+            (config) => {
+                if (isPanel(config)) {
+                    return config;
+                }
+                return this.createPanel(config);
+            },
+            true,
+        );
     };
     private parseConfig(config: IPublicTypeWidgetBaseConfig) {
         if (config.parsed) {
@@ -80,6 +95,7 @@ export class Skeleton {
     createPanel(config: PanelConfig) {
         const parsedConfig = this.parseConfig(config);
         const panel = new Panel(this, parsedConfig as PanelConfig);
+        this.panels.set(panel.name, panel);
         return panel;
     };
     createWidget(config: IPublicTypeWidgetBaseConfig) {
@@ -107,9 +123,12 @@ export class Skeleton {
         }
         return widget;
     }
-    createContainer<T extends IWidget>(name: string, handle: (item: T) => T) {
-        const container = new WidgetContainer(name, handle)
+    createContainer<T extends IWidget>(name: string, handle: (item: T) => T, exclusive = false,) {
+        const container = new WidgetContainer(name, handle,exclusive)
         return container
+    }
+    getPanel(name: string): Panel | undefined {
+        return this.panels.get(name);
     }
     add(config: IPublicTypeSkeletonConfig) {
         const parsedConfig = {
@@ -149,8 +168,8 @@ export class Skeleton {
             //     return this.bottomArea.add(parsedConfig as PanelConfig);
             // case 'leftFixedArea':
             //     return this.leftFixedArea.add(parsedConfig as PanelConfig);
-            // case 'leftFloatArea':
-            //     return this.leftFloatArea.add(parsedConfig as PanelConfig);
+            case 'leftFloatArea':
+                return this.leftFloatArea.add(parsedConfig as PanelConfig);
             // case 'stages':
             //     return this.stages.add(parsedConfig as StageConfig);
             default:
