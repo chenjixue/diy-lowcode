@@ -1,5 +1,6 @@
-import { createModuleEventBus, IEventBus } from "@/eventBus/event-bus";
+// import { createModuleEventBus, IEventBus } from "@/eventBus/event-bus";
 import { IWidget } from "./area";
+import { computed, makeObservable, observable, observe } from "mobx";
 import { PanelConfig, Skeleton } from "./editor-skeleton";
 import { WidgetContainer } from "./widget-container";
 export function isPanel(obj: any): obj is Panel {
@@ -12,9 +13,17 @@ export class Panel implements IWidget {
     readonly isPanel = true;
     readonly name: string;
     public parent?: WidgetContainer;
-    inited = false;
-    private _actived = false;
+    @observable.ref  inited = false;
+    @observable.ref private _actived = false;
+    @computed get visible(): boolean {
+        debugger
+        if (!this.parent || this.parent.visible) {
+          return this._actived;
+        }
+        return false;
+      }
     constructor(readonly skeleton: Skeleton, readonly config: PanelConfig) {
+        makeObservable(this)
         const { name } = config;
         this.name = name;
     }

@@ -2,6 +2,7 @@ import classNames from 'classnames';
 import { Component, ReactElement, isValidElement } from 'react';
 import { Title } from './title';
 import { divide } from 'lodash';
+import { observer } from 'mobx-react';
 export function composeTitle(title?: IPublicTypeTitleContent, icon?: IPublicTypeIconType, tip?: TipContent, tipAsTitle?: boolean, noIcon?: boolean) {
     if (!title) {
         title = {};
@@ -106,7 +107,7 @@ export class WidgetView extends Component<{ widget: IWidget }> {
       return widget.body;
     }
   }
-  
+@observer
 export class PanelDockView extends Component<DockProps & { dock: PanelDock }> {
     componentDidMount() {
         //   this.checkActived();
@@ -115,7 +116,6 @@ export class PanelDockView extends Component<DockProps & { dock: PanelDock }> {
     componentDidUpdate() {
         //   this.checkActived();
     }
-
     private lastActived = false;
 
     // checkActived() {

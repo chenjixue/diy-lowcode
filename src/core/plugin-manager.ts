@@ -187,12 +187,7 @@ export interface IPublicTypeI18nData {
     intl?: ReactNode;
     [key: string]: any;
 }
-export interface IPublicTypeTipConfig {
-    className?: string;
-    children?: IPublicTypeI18nData | ReactNode;
-    theme?: string;
-    direction?: 'top' | 'bottom' | 'left' | 'right';
-}
+
 export interface IPublicTypeIconConfig {
     type: string;
     size?: number | 'small' | 'xxs' | 'xs' | 'medium' | 'large' | 'xl' | 'xxl' | 'xxxl' | 'inherit';

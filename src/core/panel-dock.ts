@@ -3,8 +3,7 @@ import { IWidget } from "./area";
 import { PanelDockConfig, Skeleton } from "./editor-skeleton";
 import { composeTitle, PanelDockView, WidgetView } from "./componets/widget-views";
 import { Panel } from './panel';
-import { computed } from "mobx";
-
+import { computed,makeObservable, observable} from "mobx";
 export class PanelDock implements IWidget {
     readonly name: string;
     //外界用于判断是否是PaneDock
@@ -13,8 +12,9 @@ export class PanelDock implements IWidget {
     private inited = false;
     readonly panelName: string;
     private _shell: ReactInstance | null = null;
-    private _panel?: Panel;
+    @observable  _panel?: Panel;
     constructor(readonly skeleton: Skeleton, readonly config: PanelDockConfig) {
+        makeObservable(this);
         const { content, contentProps, panelProps, name, props } = config
         this.name = name
         this.panelName = config.panelName || name;
@@ -29,7 +29,12 @@ export class PanelDock implements IWidget {
             }) as Panel;
         }
     }
+    @computed get actived(): boolean {
+        debugger
+        return this.panel?.visible || false;
+      }
     @computed get panel() {
+        debugger
         return this._panel || this.skeleton.getPanel(this.panelName);
     }
     get body() {

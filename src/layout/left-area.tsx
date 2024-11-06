@@ -1,7 +1,9 @@
 import { Component, Fragment } from 'react';
 import classNames from 'classnames';
+import { observer } from "mobx-react";
 import { Area } from '@/core/area';
 
+@observer
 export default class LeftArea extends Component<{ area: Area }> {
   render() {
     const { area } = this.props;

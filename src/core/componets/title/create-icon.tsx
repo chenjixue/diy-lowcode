@@ -20,7 +20,7 @@ export function isESModule(obj: any): obj is ESModule {
 }
 export type IPublicTypeIconType = ReactElement
 export function createIcon(
-  icon?: IPublicTypeIconType | null,
+  icon?: IPublicTypeIconType,
   props?: Record<string, unknown>,
 ): ReactNode {
   if (!icon) {
