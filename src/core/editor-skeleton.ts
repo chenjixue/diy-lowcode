@@ -5,6 +5,7 @@ import { IPublicTypeWidgetBaseConfig } from "./types";
 import { PanelDock } from "./panel-dock";
 import { Dock } from "./dock";
 import { isPanel, Panel } from "./pane";
+import { action, makeObservable } from "mobx";
 export interface DockConfig extends IDockBaseConfig {
     type: 'Dock';
     content?: Object
@@ -49,8 +50,10 @@ export function isObject(value: any): value is Record<string, unknown> {
 export class Skeleton {
     readonly leftArea;
     readonly leftFloatArea;
+    readonly leftFixedArea;
     private panels = new Map<string, Panel>();
     constructor() {
+        makeObservable(this);
         this.leftArea = new Area(this, "leftArea", (config) => {
             return this.createWidget(config)
         })
@@ -65,6 +68,17 @@ export class Skeleton {
             },
             true,
         );
+        this.leftFixedArea = new Area(
+            this,
+            'leftFixedArea',
+            (config) => {
+              if (isPanel(config)) {
+                return config;
+              }
+              return this.createPanel(config);
+            },
+            true,
+          );
     };
     private parseConfig(config: IPublicTypeWidgetBaseConfig) {
         if (config.parsed) {
@@ -129,6 +143,20 @@ export class Skeleton {
     }
     getPanel(name: string): Panel | undefined {
         return this.panels.get(name);
+    }
+    @action
+    toggleFloatStatus(panel: Panel) {
+      const isFloat = panel?.parent?.name === 'leftFloatArea';
+      if (isFloat) {
+        this.leftFloatArea.remove(panel);
+        this.leftFixedArea.add(panel);
+        this.leftFixedArea.container.active(panel);
+      } else {
+        this.leftFixedArea.remove(panel);
+        this.leftFloatArea.add(panel);
+        this.leftFloatArea.container.active(panel);
+      }
+    //   engineConfig.getPreference().set(`${panel.name}-pinned-status-isFloat`, !isFloat, 'skeleton');
     }
     add(config: IPublicTypeSkeletonConfig) {
         const parsedConfig = {

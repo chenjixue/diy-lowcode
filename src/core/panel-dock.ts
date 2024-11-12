@@ -30,11 +30,9 @@ export class PanelDock implements IWidget {
         }
     }
     @computed get actived(): boolean {
-        debugger
         return this.panel?.visible || false;
       }
     @computed get panel() {
-        debugger
         return this._panel || this.skeleton.getPanel(this.panelName);
     }
     get body() {

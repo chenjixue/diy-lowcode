@@ -35,8 +35,16 @@ export class Area<C extends IPublicTypeWidgetBaseConfig = any, T extends IWidget
         this.container = skeleton.createContainer(name, handle, exclusive)
     }
     add(config: T): T {
+      const item = this.container.get(config.name);
+      if (item) {
+        return item;
+      }
         return this.container.add(config)
     }
+    remove(config: T | string): number {
+      return this.container.remove(config);
+    }
+  
     setVisible(flag: boolean) {
         if (this.exclusive) {
           const { current } = this.container;

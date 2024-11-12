@@ -1,4 +1,4 @@
-import { Component } from 'react'
+import { Component, Fragment } from 'react'
 import { observer } from "mobx-react";
 import classNames from 'classnames';
 import { Area } from '@/core/area';
@@ -15,18 +15,19 @@ export default class LeftFloatPane  extends Component<{ area: Area<any, Panel> }
         })}
         // style={style}
       >
+         <Contents area={area} />
       </div>
     );
   }
 }
 
-// class Contents extends Component<{ area: Area<any, Panel> }> {
-//   render() {
-//     const { area } = this.props;
-//     return (
-//       <Fragment>
-//         {area.container.items.map((panel) => panel.content)}
-//       </Fragment>
-//     );
-//   }
-// }
+class Contents extends Component<{ area: Area<any, Panel> }> {
+  render() {
+    const { area } = this.props;
+    return (
+      <Fragment>
+        {area.container.items.map((panel) => panel.content)}
+      </Fragment>
+    );
+  }
+}
