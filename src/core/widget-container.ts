@@ -10,6 +10,8 @@ export interface Activeable {
 function isActiveable(obj: any): obj is Activeable {
     return obj && obj.setActive;
 }
+
+
 export class WidgetContainer<T extends WidgetItem = any> {
     items: T[] = [];
     private maps: { [name: string]: T } = {};
@@ -18,7 +20,6 @@ export class WidgetContainer<T extends WidgetItem = any> {
         return this._current;
       }
     @computed get visible() {
-      debugger
       return this.checkVisible();
     }
     constructor(readonly name: string, private handle: (item: T) => T, private exclusive: boolean = false,private checkVisible: () => boolean = () => true) {

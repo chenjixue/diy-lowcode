@@ -39,11 +39,11 @@ export class Workbench extends Component<{
           <div className="lc-workbench-body">
             <LeftArea area={skeleton.leftArea} />
             <LeftFloatPane area={skeleton.leftFloatArea} />
-            {/* <LeftFixedPane area={skeleton.leftFixedArea} /> */}
+            <LeftFixedPane area={skeleton.leftFixedArea} />
             <div className="lc-workbench-center">
-              {/* <Toolbar area={skeleton.toolbar} />
+              {/* <Toolbar area={skeleton.toolbar} /> */}
               <MainArea area={skeleton.mainArea} />
-              <BottomArea area={skeleton.bottomArea} /> */}
+              {/* <BottomArea area={skeleton.bottomArea} /> */}
             </div>
             {/* <RightArea area={skeleton.rightArea} /> */}
           </div>

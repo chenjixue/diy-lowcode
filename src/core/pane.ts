@@ -3,6 +3,8 @@ import { IWidget } from "./area";
 import { computed, makeObservable, observable, observe } from "mobx";
 import { PanelConfig, Skeleton } from "./editor-skeleton";
 import { WidgetContainer } from "./widget-container";
+import { createElement, ReactNode } from "react";
+import { TitledPanelView } from "./componets/widget-views";
 export function isPanel(obj: any): obj is Panel {
     return obj && obj.isPanel;
 }
@@ -13,10 +15,10 @@ export class Panel implements IWidget {
     readonly isPanel = true;
     readonly name: string;
     public parent?: WidgetContainer;
+    private id = ""
     @observable.ref  inited = false;
     @observable.ref private _actived = false;
     @computed get visible(): boolean {
-        debugger
         if (!this.parent || this.parent.visible) {
           return this._actived;
         }
@@ -36,6 +38,11 @@ export class Panel implements IWidget {
         }
         this.parent = parent;
     }
+    
+      get content(): ReactNode {
+        const area = this.config?.area || this.parent?.name;
+        return createElement(TitledPanelView, { panel: this, key: this.id, area });
+      }
     toggle() {
         this.setActive(!this._actived);
     }

@@ -2,6 +2,9 @@ import { Skeleton } from "./editor-skeleton";
 import { IPublicTypeWidgetBaseConfig } from "./types";
 import { WidgetContainer } from "./widget-container";
 import { computed, observable, makeObservable } from "mobx";
+import {createElement, ReactNode} from "react";
+import {WidgetView} from "@/core/componets/widget-views.tsx";
+import {createContent} from "@/util/create-content.ts";
 export interface IArea<C, T> {
     add(config: T): T;
 }
@@ -15,6 +18,25 @@ export interface WidgetConfig extends IPublicTypeWidgetBaseConfig {
 }
 export class Widget implements IWidget {
     readonly name: string;
+    private _body: ReactNode;
+    get body() {
+        // if (this.inited) {
+        //     return this._body;
+        // }
+        // this.inited = true;
+        const { content, contentProps } = this.config;
+        this._body = createContent(content, {
+            ...contentProps,
+            config: this.config,
+            // editor: getEvent(this.skeleton.editor),
+        });
+        return this._body;
+    }
+    get content(): ReactNode {
+        return createElement(WidgetView, {
+            widget: this,
+        });
+    }
     constructor(readonly skeleton: Skeleton, readonly config: WidgetConfig) {
         const { name } = config
         this.name = name
@@ -35,8 +57,16 @@ export class Area<C extends IPublicTypeWidgetBaseConfig = any, T extends IWidget
         this.container = skeleton.createContainer(name, handle, exclusive)
     }
     add(config: T): T {
+      const item = this.container.get(config.name);
+      if (item) {
+        return item;
+      }
         return this.container.add(config)
     }
+    remove(config: T | string): number {
+      return this.container.remove(config);
+    }
+
     setVisible(flag: boolean) {
         if (this.exclusive) {
           const { current } = this.container;

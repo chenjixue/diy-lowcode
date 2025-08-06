@@ -1,11 +1,12 @@
 import { Component, Fragment } from 'react';
 import classNames from 'classnames';
 import { Area } from '@/core/area';
+import { observer } from 'mobx-react';
 
+@observer
 export default class LeftFixedPane extends Component<{ area: Area<PanelConfig, Panel> }> {
   componentDidUpdate() {
     // FIXME: dirty fix, need deep think
-    this.props.area.skeleton.editor.get('designer')?.touchOffsetObserver();
   }
 
 

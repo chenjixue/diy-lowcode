@@ -130,7 +130,6 @@ export class Title extends Component<IPublicTypeTitleProps> {
     //     tip = <Tip {...tipProps} />;
     //   }
     // }
-    debugger
     return (
       <span
         className={classNames('lc-title', className, (title as IPublicTypeTitleConfig).className, {

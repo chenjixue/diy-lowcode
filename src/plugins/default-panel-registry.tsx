@@ -1,4 +1,5 @@
 import { SettingsPrimaryPane } from "@/componets/settings-primary-pane";
+import DesignerPlugin from "@/core/designer/designer";
 // 注册默认的面板
 export const defaultPanelRegistry = (editor: any) => {
   const fun = (ctx: any) => {
@@ -6,11 +7,19 @@ export const defaultPanelRegistry = (editor: any) => {
       init() {
         const { skeleton } = ctx;
         skeleton.add({
-          area: 'rightArea',
-          name: 'settingsPane',
-          type: 'Panel',
-          content: <SettingsPrimaryPane />,
+          area: 'mainArea',
+          name: 'designer',
+          type: 'Widget',
+          content: <DesignerPlugin
+            engineEditor={editor}
+          />,
         });
+        // skeleton.add({
+        //   area: 'rightArea',
+        //   name: 'settingsPane',
+        //   type: 'Panel',
+        //   content: <SettingsPrimaryPane />,
+        // });
       },
     };
   };

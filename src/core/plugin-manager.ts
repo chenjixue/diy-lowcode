@@ -361,10 +361,10 @@ declare type FilterNotOptional<T> = Pick<T, Exclude<{
 declare type PartialEither<T, K extends keyof any> = {
     [P in Exclude<keyof FilterOptional<T>, K>]-?: T[P];
 } & {
-        [P in Exclude<keyof FilterNotOptional<T>, K>]?: T[P];
-    } & {
-        [P in Extract<keyof T, K>]?: undefined;
-    };
+    [P in Exclude<keyof FilterNotOptional<T>, K>]?: T[P];
+} & {
+    [P in Extract<keyof T, K>]?: undefined;
+};
 declare type Object = {
     [name: string]: any;
 };
@@ -4319,6 +4319,8 @@ export interface IPublicModelClipboard {
 }
 export interface ILowCodePluginContextPrivate {
     set skeleton(skeleton: IPublicApiSkeleton);
+    set project(project: any);
+    set material(material:any);
 }
 export interface IPublicModelResource {
     get title(): string | undefined;
@@ -5431,6 +5433,12 @@ export class LowCodePluginRuntime implements ILowCodePluginRuntime {
     private pluginName: string;
 
     meta: IPublicTypePluginMeta;
+    get name() {
+        return this.pluginName;
+    }
+    get dep() {
+        return [];
+    }
 
     constructor(
         pluginName: string,
@@ -5529,7 +5537,7 @@ export class LowCodePluginManager implements ILowCodePluginManager {
         const config = pluginModel(ctx, {});
         // @ts-ignore
         pluginName = pluginName || config.name;
-  
+
         const plugin = new LowCodePluginRuntime(pluginName, this, config, meta);
         if (registerOptions?.autoInit) {
             await plugin.init();

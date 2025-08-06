@@ -1,22 +1,19 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from "path"
+import { resolve } from 'path';
 // https://vitejs.dev/config/
 export default defineConfig({
-  build: {
+   build: {
     rollupOptions: {
-      input: {
-        main: path.resolve(__dirname, 'index.html'),
-        // iframe通过script注入渲染的renderer渲染器所以需要打包份
-        renderer: path.resolve(__dirname, 'src/core/react-simulator-renderer/renderer.ts'),
-      }
+      input: resolve(__dirname, 'renderer.html')
     }
   },
   plugins: [
     react({
       babel: {
         plugins: [
-          ['@babel/plugin-proposal-decorators', { "legacy": true }],
+          ['@babel/plugin-proposal-decorators',{ "legacy": true }],
           ['@babel/plugin-proposal-class-properties', { loose: true }],
         ],
       }
