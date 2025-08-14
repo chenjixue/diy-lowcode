@@ -85,7 +85,7 @@ export class BuiltinSimulatorHostView extends Component<SimulatorHostProps> {
         super(props);
         const { project, onMount, designer } = this.props;
         this.host = new BuiltinSimulatorHost(project, designer);
-        // this.host.setProps(this.props);
+        this.host.setProps(this.props);
         // onMount?.(this.host);
     }
 

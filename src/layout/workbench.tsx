@@ -26,7 +26,6 @@ export class Workbench extends Component<{
   }
   
   render() {
-    console.log("测试包111ss")
     const {
       skeleton,
       className,

@@ -19,27 +19,29 @@ export function isESModule(obj: any): obj is ESModule {
   return obj && obj.__esModule;
 }
 export type IPublicTypeIconType = ReactElement
+
 export function createIcon(
-  icon?: IPublicTypeIconType,
+    icon?: IPublicTypeIconType,
   props?: Record<string, unknown>,
 ): ReactNode {
-  if (!icon) {
-    return null;
-  }
+    if (!icon) {
+        return null;
+    }
   if (isESModule(icon)) {
     icon = icon.default;
-  }
-  if (typeof icon === 'string') {
+    }
+    if (typeof icon === 'string') {
     if (URL_RE.test(icon)) {
       return <img src={icon} {...props} />;
     }
     // return <Icon type={icon} {...props} />;
-  }
+    }
   if (isValidElement(icon)) {
     return cloneElement(icon, { ...props });
-  }
+    }
   if (isReactComponent(icon)) {
 
     return createElement(icon, { ...props });
   }
+
 }

@@ -18,7 +18,7 @@ export function createDefer<T = any>(): Defer<T> {
 
 export function load(url: string, scriptType?: string) {
   const node = document.createElement('script');
-
+  
   // node.setAttribute('crossorigin', 'anonymous');
 
   node.onload = onload;
