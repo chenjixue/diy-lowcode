@@ -20,7 +20,7 @@ const EditorInitPlugin = (ctx: IPublicModelPluginContext, options: any) => {
 
       const schema = await getProjectSchema("");
       // // 加载 schema
-      // project.importSchema(schema as any);
+      project.importSchema(schema as any);
     },
   };
 }

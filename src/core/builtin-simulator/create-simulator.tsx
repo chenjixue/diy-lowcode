@@ -1,9 +1,8 @@
-import SimulatorRenderer from "@/core/react-simulator-renderer/renderer.ts"
 import { Component, PureComponent, createElement, Fragment } from "react";
 import { AssetLevel, AssetLevels, AssetType } from "../types";
 import { BuiltinSimulatorHost } from "../host/host";
 import { observer } from 'mobx-react';
-import { assetItem, isAssetBundle, isAssetItem } from "@/util/asset";
+import { assetItem, isAssetBundle, isAssetItem, isCSSUrl } from "@/util/asset";
 export interface AssetItem {
     type: AssetType;
     content?: string | null;
@@ -16,7 +15,7 @@ export interface AssetItem {
 export function createSimulator(
     host: BuiltinSimulatorHost,
     iframe: HTMLIFrameElement,
-    vendors: [] = [],
+    vendors: any[] = [],
 ): Promise<BuiltinSimulatorRenderer> {
     const win: any = iframe.contentWindow;
     const doc = iframe.contentDocument!;
@@ -25,7 +24,7 @@ export function createSimulator(
     // win.AliLowCodeEngine = innerPlugins._getLowCodePluginContext({});
     // win.SimulatorRenderer = SimulatorRenderer
     win.LCSimulatorHost = host;
-    (window as any).LCSimulatorHost = host
+    // (window as any).LCSimulatorHost = host
     win._ = window._;
 
     const styles: any = {};
@@ -48,8 +47,12 @@ export function createSimulator(
                 }
                 continue;
             }
+            if (Array.isArray(asset)) {
+                parseAssetList(asset, level);
+                continue;
+            }
             if (!isAssetItem(asset)) {
-                asset = assetItem(AssetType.JSUrl, asset, level)!;
+                asset = assetItem(isCSSUrl(asset) ? AssetType.CSSUrl : AssetType.JSUrl, asset, level)!;
             }
             const id = asset.id ? ` data-id="${asset.id}"` : '';
             const lv = asset.level || level || AssetLevel.Environment;

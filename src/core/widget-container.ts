@@ -13,16 +13,16 @@ function isActiveable(obj: any): obj is Activeable {
 
 
 export class WidgetContainer<T extends WidgetItem = any> {
-    items: T[] = [];
+    @observable.shallow items: T[] = [];
     private maps: { [name: string]: T } = {};
     @observable.ref private _current: T & Activeable | null = null;
     @computed get current() {
         return this._current;
-      }
-    @computed get visible() {
-      return this.checkVisible();
     }
-    constructor(readonly name: string, private handle: (item: T) => T, private exclusive: boolean = false,private checkVisible: () => boolean = () => true) {
+    @computed get visible() {
+        return this.checkVisible();
+    }
+    constructor(readonly name: string, private handle: (item: T) => T, private exclusive: boolean = false, private checkVisible: () => boolean = () => true) {
         makeObservable(this)
     }
     add(item: T): T {
