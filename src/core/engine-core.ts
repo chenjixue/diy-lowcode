@@ -1,6 +1,6 @@
 import { OutlinePlugin } from "@/plugins/plugin-outline-pane";
 import { Editor } from "./editor";
-import ReactDOM from 'react-dom/client'
+import ReactDOM from 'react-dom'
 import { Skeleton } from "@/shell/api/skeleton";
 import { ILowCodePluginContextPrivate, IPublicTypePluginMeta, LowCodePluginManager } from "./plugin-manager";
 import { Plugins } from "./plugins";
@@ -26,7 +26,7 @@ export interface ILowCodePluginContextApiAssembler {
 // 注册一批内置插件
 async function registryInnerPlugin(designer: any, editor: any, plugins: Plugins) {
   const componentMetaParserPlugin = componentMetaParser(designer);
-  await plugins.register(componentMetaParserPlugin);
+  await plugins.register(componentMetaParserPlugin, {}, { autoInit: true })
   await plugins.register(EditorInitPlugin, {
     scenarioName: 'general',
     displayName: '综合场景',
@@ -46,15 +46,18 @@ async function registryInnerPlugin(designer: any, editor: any, plugins: Plugins)
         }
       ],
     },
-  });
-  await plugins.register(OutlinePlugin, {}, { autoInit: true });
+  }, { autoInit: true });
   await plugins.register(defaultPanelRegistry(editor), {}, { autoInit: true });
-}
 
+  await plugins.register(OutlinePlugin, {}, { autoInit: true });
+}
 
 const editor = new Editor();
 const designer = new Designer();
 const material = new Material(editor);
+const hotkey = {
+  bind: () => { }
+}
 // 执行操作的project
 const { project: innerProject } = designer;
 // shell project
@@ -75,11 +78,19 @@ const innerPlugins = new LowCodePluginManager(pluginContextApiAssembler);
 // 切换模式看具体使用那大类的插件
 let plugins = new Plugins(innerPlugins)
 // const innerWorkspace: IWorkspace = new InnerWorkspace(registryInnerPlugin, shellModelFactory);
-registryInnerPlugin({}, editor, plugins);
+registryInnerPlugin(designer, editor, plugins);
+(window as any).AliLowCodeEngine = {
+  material,
+  project,
+  hotkey,
+}
+
 export {
   material,
-  project
+  project,
+  hotkey,
 }
+
 export async function init(
   container?: HTMLElement,
   // options?: IPublicTypeEngineOptions,

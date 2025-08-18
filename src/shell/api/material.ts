@@ -42,7 +42,9 @@ export class Material implements IPublicApiMaterial {
     return this[editorSymbol].get('assets');
   }
 
-
+  addBuiltinComponentAction(){
+    
+  }
   /**
    * 监听 assets 变化的事件
    * @param fn

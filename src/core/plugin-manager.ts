@@ -1420,14 +1420,6 @@ export interface IPublicTypeBlockSchema extends IPublicTypeContainerSchema {
 }
 
 export type IPublicTypeRootSchema = IPublicTypePageSchema | IPublicTypeComponentSchema | IPublicTypeBlockSchema;
-export enum IPublicEnumTransformStage {
-    Render = 'render',
-    Serilize = 'serilize',
-    Save = 'save',
-    Clone = 'clone',
-    Init = 'init',
-    Upgrade = 'upgrade',
-}
 /**
  * @deprecated use IPublicEnumTransformStage instead
  */

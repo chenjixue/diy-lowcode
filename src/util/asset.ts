@@ -70,7 +70,7 @@ export class AssetLoader {
         if (!content) {
             return;
         }
-        return isUrl ? load(content, scriptType) : null;;
+        return load(content, scriptType)
     }
 
 }

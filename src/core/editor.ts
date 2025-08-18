@@ -29,15 +29,24 @@ export class Editor {
       this.delWait(keyOrType, fn);
     };
   }
+  onceGot(keyOrType: string) {
+    const x = this.context.get(keyOrType);
+    if (x !== undefined) {
+      return Promise.resolve(x);
+    }
+    return new Promise((resolve) => {
+      this.setWait(keyOrType, resolve, true);
+    });
+  }
   get<T = undefined, KeyOrType = any>(
     keyOrType: KeyOrType,
   ): any {
     return this.context.get(keyOrType as any);
   }
   set(key: any, data: any): void | Promise<void> {
-    //   if (key === 'assets') {
-    //     return this.setAssets(data);
-    //   }
+      if (key === 'assets') {
+        return this.setAssets(data);
+      }
     // store the data to engineConfig while invoking editor.set()
     if (!keyBlacklist.includes(key as string)) {
       engineConfig.set(key as any, data);

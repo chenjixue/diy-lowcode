@@ -1,6 +1,6 @@
 
 import { DocumentModel } from "@/core/designer/document-model";
-import { computed, makeObservable, observable, observe } from "mobx";
+import { computed, makeObservable, observable, observe, action } from "mobx";
 export class Project implements IProject {
 
   @observable.shallow readonly documents: IDocumentModel[] = [];
@@ -31,7 +31,7 @@ export class Project implements IProject {
     makeObservable(this);
     // this.load(schema);
   }
-
+  @action
   createDocument(data?: IPublicTypeRootSchema): IDocumentModel {
     const doc = new DocumentModel(this, data || this?.data?.componentsTree?.[0]);
     this.documents.push(doc);
@@ -67,4 +67,5 @@ export class Project implements IProject {
       // }
     }
   }
+
 }

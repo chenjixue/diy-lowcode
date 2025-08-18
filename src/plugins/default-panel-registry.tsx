@@ -14,12 +14,6 @@ export const defaultPanelRegistry = (editor: any) => {
             engineEditor={editor}
           />,
         });
-        // skeleton.add({
-        //   area: 'rightArea',
-        //   name: 'settingsPane',
-        //   type: 'Panel',
-        //   content: <SettingsPrimaryPane />,
-        // });
       },
     };
   };

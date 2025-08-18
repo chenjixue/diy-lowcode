@@ -3,13 +3,12 @@ import { render as reactRender } from 'react-dom';
 import { Router, Route, Switch } from 'react-router';
 import { observer } from 'mobx-react';
 import classNames from 'classnames';
-import LowCodeRenderer from '../react-renderer/index.ts';
 import { computed, observable, makeObservable } from "mobx";
 import { createMemoryHistory, MemoryHistory } from 'history';
-import { host } from '../host/index.ts';
 import "./designer.less"
 import { BuiltinSimulatorHostView } from "../builtin-simulator/host-view.tsx";
 import { Project } from "@/project/project.ts";
+import { componentDefaults, legacyIssues } from "./component-actions.ts";
 
 export class ProjectView extends Component<{ designer: Designer }> {
     componentDidMount() {
@@ -33,19 +32,27 @@ export class ProjectView extends Component<{ designer: Designer }> {
 export class DesignerView extends Component {
     readonly designer: IDesigner;
     readonly viewName: string | undefined;
-
+    @observable.ref private _simulatorProps: any;
     constructor(props: IProps) {
         super(props);
         const { designer, ...designerProps } = props;
         this.viewName = designer?.viewName;
         if (designer) {
             this.designer = designer;
-            // designer.setProps(designerProps);
+            designer.setProps(designerProps);
         } else {
             // this.designer = new Designer(designerProps);
         }
     }
-
+    setProps(nextProps: DesignerProps) {
+        const props = this.props ? { ...this.props, ...nextProps } : nextProps;
+        // if (props.simulatorProps !== this.props.simulatorProps) {
+        this._simulatorProps = props.simulatorProps;
+        // }
+    }
+    @computed get simulatorProps(): Record<string, any> {
+        return this._simulatorProps || {};
+    }
     render() {
         const { className, style } = this.props;
         return (
@@ -55,49 +62,78 @@ export class DesignerView extends Component {
         );
     }
 }
-function preprocessMetadata(metadata){
-  if (metadata.configure) {
-    if (Array.isArray(metadata.configure)) {
-      return {
-        ...metadata,
-        configure: {
-          props: metadata.configure,
-        },
-      };
+function preprocessMetadata(metadata) {
+    if (metadata.configure) {
+        if (Array.isArray(metadata.configure)) {
+            return {
+                ...metadata,
+                configure: {
+                    props: metadata.configure,
+                },
+            };
+        }
+        return metadata as any;
     }
-    return metadata as any;
-  }
 
-  return {
-    ...metadata,
-    configure: {},
-  };
+    return {
+        ...metadata,
+        configure: {},
+    };
 }
-export class ComponentMeta implements IComponentMeta {
+export class ComponentMeta {
     prototype?: any;
     private _npm?: any;
-   
+    private _title?: any;
     private _componentName?: string;
-    constructor(readonly designer: Designer, metadata: IPublicTypeComponentMetadata) {
-        // this.parseMetadata(metadata);
+    private _transformedMetadata?: any;
+    get componentName(): string {
+        return this._componentName!;
     }
-    // private transformMetadata(
-    //     metadta: any,
-    // ): any {
-    //     const registeredTransducers = this.designer.componentActions.getRegisteredMetadataTransducers();
-    //     const result = registeredTransducers.reduce((prevMetadata, current) => {
-    //         return current(prevMetadata);
-    //     }, preprocessMetadata(metadta));
+    constructor(readonly designer: Designer, metadata: any) {
+        this.parseMetadata(metadata);
+    }
+    getMetadata() {
+        return this._transformedMetadata!;
+    }
+    get npm() {
+        return this._npm;
+    }
+    get advanced() {
+        return this.getMetadata().configure.advanced || {};
+    }
+    private parseMetadata(metadata: any) {
+        const { componentName, npm, ...others } = metadata;
+        let _metadata = metadata;
+        if ((metadata as any).prototype) {
+            this.prototype = (metadata as any).prototype;
+        }
+        this._npm = npm || this._npm;
+        this._componentName = componentName;
 
-    //     if (!result.configure) {
-    //         result.configure = {};
-    //     }
-    //     if (result.experimental && !result.configure.advanced) {
-    //         deprecate(result.experimental, '.experimental', '.configure.advanced');
-    //         result.configure.advanced = result.experimental;
-    //     }
-    //     return result as any;
-    // }
+        // 额外转换逻辑
+        this._transformedMetadata = this.transformMetadata(_metadata);
+
+        const { title } = this._transformedMetadata;
+        if (title) {
+            this._title =
+                typeof title === 'string'
+                    ? {
+                        type: 'i18n',
+                        'en-US': this.componentName,
+                        'zh-CN': title,
+                    }
+                    : title;
+        }
+    }
+    private transformMetadata(
+        metadta: any,
+    ): any {
+        const registeredTransducers = this.designer.componentActions.getRegisteredMetadataTransducers();
+        const result = registeredTransducers.reduce((prevMetadata, current) => {
+            return current(prevMetadata);
+        }, preprocessMetadata(metadta));
+        return result as any;
+    }
     // private parseMetadata(metadata: IPublicTypeComponentMetadata) {
     //     const { componentName, npm, ...others } = metadata;
     //     let _metadata = metadata;
@@ -186,215 +222,59 @@ export class ComponentMeta implements IComponentMeta {
     //     this.emitter.emit('metadata_change');
     // }
 }
-// export function componentDefaults(metadata: Metadata): Metadata {
-//   const { configure, componentName } = metadata;
-//   const { component = {} } = configure;
-//   if (!component.nestingRule) {
-//     let m;
-//     // uri match xx.Group set subcontrolling: true, childWhiteList
-//     // eslint-disable-next-line no-cond-assign
-//     if ((m = /^(.+)\.Group$/.exec(componentName))) {
-//       // component.subControlling = true;
-//       component.nestingRule = {
-//         childWhitelist: [`${m[1]}`],
-//       };
-//       // eslint-disable-next-line no-cond-assign
-//     } else if ((m = /^(.+)\.Node$/.exec(componentName))) {
-//       // uri match xx.Node set selfControlled: false, parentWhiteList
-//       // component.selfControlled = false;
-//       component.nestingRule = {
-//         parentWhitelist: [`${m[1]}`, componentName],
-//       };
-//       // eslint-disable-next-line no-cond-assign
-//     } else if ((m = /^(.+)\.(Item|Node|Option)$/.exec(componentName))) {
-//       // uri match .Item .Node .Option set parentWhiteList
-//       component.nestingRule = {
-//         parentWhitelist: [`${m[1]}`],
-//       };
-//     }
-//   }
-//   // if (component.isModal == null && /Dialog/.test(componentName)) {
-//   //   component.isModal = true;
-//   // }
-//   return {
-//     ...metadata,
-//     configure: {
-//       ...configure,
-//       component,
-//     },
-//   };
-// }
-// export function legacyIssues(metadata) {
-//   const { devMode } = metadata;
-//   return {
-//     ...metadata,
-//     devMode: devMode?.replace(/(low|pro)code/, '$1Code')
-//   };
-// }
-// export class ComponentActions {
-//   private metadataTransducers = [];
+export class ComponentActions {
+    private metadataTransducers: any[] = [];
 
-//   actions = [
-//     {
-//       name: 'remove',
-//       content: {
-//         icon: IconRemove,
-//         title: intlNode('remove'),
-//         /* istanbul ignore next */
-//         action(node: IPublicModelNode) {
-//           node.remove();
-//         },
-//       },
-//       important: true,
-//     },
-//     {
-//       name: 'hide',
-//       content: {
-//         icon: IconHidden,
-//         title: intlNode('hide'),
-//         /* istanbul ignore next */
-//         action(node: IPublicModelNode) {
-//           node.visible = false;
-//         },
-//       },
-//       /* istanbul ignore next */
-//       condition: (node: IPublicModelNode) => {
-//         return node.componentMeta?.isModal;
-//       },
-//       important: true,
-//     },
-//     {
-//       name: 'copy',
-//       content: {
-//         icon: IconClone,
-//         title: intlNode('copy'),
-//         /* istanbul ignore next */
-//         action(node: IPublicModelNode) {
-//           // node.remove();
-//           const { document: doc, parent, index } = node;
-//           if (parent) {
-//             const newNode = doc?.insertNode(parent, node, (index ?? 0) + 1, true);
-//             deduplicateRef(newNode);
-//             newNode?.select();
-//             const { isRGL, rglNode } = node?.getRGL();
-//             if (isRGL) {
-//               // 复制 layout 信息
-//               const layout: any = rglNode?.getPropValue('layout') || [];
-//               const curLayout = layout.filter((item: any) => item.i === node.getPropValue('fieldId'));
-//               if (curLayout && curLayout[0]) {
-//                 layout.push({
-//                   ...curLayout[0],
-//                   i: newNode?.getPropValue('fieldId'),
-//                 });
-//                 rglNode?.setPropValue('layout', layout);
-//                 // 如果是磁贴块复制，则需要滚动到影响位置
-//                 setTimeout(() => newNode?.document?.project?.simulatorHost?.scrollToNode(newNode), 10);
-//               }
-//             }
-//           }
-//         },
-//       },
-//       important: true,
-//     },
-//     {
-//       name: 'lock',
-//       content: {
-//         icon: IconLock, // 锁定 icon
-//         title: intlNode('lock'),
-//         /* istanbul ignore next */
-//         action(node: IPublicModelNode) {
-//           node.lock();
-//         },
-//       },
-//       /* istanbul ignore next */
-//       condition: (node: IPublicModelNode) => {
-//         return engineConfig.get('enableCanvasLock', false) && node.isContainerNode && !node.isLocked;
-//       },
-//       important: true,
-//     },
-//     {
-//       name: 'unlock',
-//       content: {
-//         icon: IconUnlock, // 解锁 icon
-//         title: intlNode('unlock'),
-//         /* istanbul ignore next */
-//         action(node: IPublicModelNode) {
-//           node.lock(false);
-//         },
-//       },
-//       /* istanbul ignore next */
-//       condition: (node: IPublicModelNode) => {
-//         return engineConfig.get('enableCanvasLock', false) && node.isContainerNode && node.isLocked;
-//       },
-//       important: true,
-//     },
-//   ];
+    constructor() {
+        this.registerMetadataTransducer(legacyIssues, 2, 'legacy-issues'); // should use a high level priority, eg: 2
+        this.registerMetadataTransducer(componentDefaults, 100, 'component-defaults');
+    }
 
-//   constructor() {
-//     this.registerMetadataTransducer(legacyIssues, 2, 'legacy-issues'); // should use a high level priority, eg: 2
-//     this.registerMetadataTransducer(componentDefaults, 100, 'component-defaults');
-//   }
+    registerMetadataTransducer(
+        transducer: any,
+        level = 100,
+        id?: string,
+    ) {
+        transducer.level = level;
+        transducer.id = id;
+        const i = this.metadataTransducers.findIndex((item) => item.level != null && item.level > level);
+        if (i < 0) {
+            this.metadataTransducers.push(transducer);
+        } else {
+            this.metadataTransducers.splice(i, 0, transducer);
+        }
+    }
 
-//   removeBuiltinComponentAction(name: string) {
-//     const i = this.actions.findIndex((action) => action.name === name);
-//     if (i > -1) {
-//       this.actions.splice(i, 1);
-//     }
-//   }
-//   addBuiltinComponentAction(action: any) {
-//     this.actions.push(action);
-//   }
+    getRegisteredMetadataTransducers(): any[] {
+        return this.metadataTransducers;
+    }
+}
 
-//   modifyBuiltinComponentAction(
-//     actionName: string,
-//     handle: (action: any) => void,
-//   ) {
-//     const builtinAction = this.actions.find((action) => action.name === actionName);
-//     if (builtinAction) {
-//       handle(builtinAction);
-//     }
-//   }
-
-//   registerMetadataTransducer(
-//     transducer: any,
-//     level = 100,
-//     id?: string,
-//   ) {
-//     transducer.level = level;
-//     transducer.id = id;
-//     const i = this.metadataTransducers.findIndex((item) => item.level != null && item.level > level);
-//     if (i < 0) {
-//       this.metadataTransducers.push(transducer);
-//     } else {
-//       this.metadataTransducers.splice(i, 0, transducer);
-//     }
-//   }
-
-//   getRegisteredMetadataTransducers(): any[] {
-//     return this.metadataTransducers;
-//   }
-// }
 export class Designer {
     readonly project: any;
-    // readonly componentActions = new ComponentActions();
     private _lostComponentMetasMap = new Map();
     private _componentMetasMap = new Map();
+    readonly componentActions = new ComponentActions();
+    @observable.ref private _simulatorProps?: any;
+    // @observable.ref private _simulatorComponent: any;
     constructor(props: DesignerProps) {
         this.project = new Project(this, undefined,);
+    }
+    setProps(nextProps) {
+        const props = this.props ? { ...this.props, ...nextProps } : nextProps;
+        // if (props.simulatorComponent !== this.props?.simulatorComponent) {
+        // this._simulatorComponent = props.simulatorComponent;
+        // }
+        this._simulatorProps = props.simulatorProps;
     }
     createComponentMeta(data: IPublicTypeComponentMetadata): IComponentMeta | null {
         const key = data.componentName;
         if (!key) {
             return null;
         }
-        let meta = this._componentMetasMap.get(key);
-        if (meta) {
-            meta.setMetadata(data);
-            this._componentMetasMap.set(key, meta);
-        } else {
-            meta = new ComponentMeta(this, data);
-            this._componentMetasMap.set(key, meta);
-        }
+        // let meta = this._componentMetasMap.get(key);
+        let meta = new ComponentMeta(this, data);
+        this._componentMetasMap.set(key, meta);
         return meta;
     }
 
@@ -423,16 +303,40 @@ export class Designer {
     }
     @computed get projectSimulatorProps(): any {
         return {
+            ...this._simulatorProps,
             project: this.project,
             designer: this,
         };
     }
+
     @computed get componentsMap(): { [key: string]: IPublicTypeNpmInfo | Component } {
         const maps: any = {};
         const designer = this;
         designer._componentMetasMap.forEach((config, key) => {
             const metaData = config.getMetadata();
             if (metaData.devMode === 'lowCode') {
+                // 例如
+                // const lowcodePlugin = (ctx: IPublicModelPluginContext) => {
+                //     return {
+                //         async init() {
+                //             const { material } = ctx;
+                //             material.loadIncrementalAssets({
+                //                 version: '',
+                //                 components: [{
+                //                     devMode: 'lowCode',
+                //                     componentName: 'LowcodeDemo',
+                //                     title: '低代码组件示例',
+                //                     group: '低代码组件',
+                //                     schema: lowcodeSchema as any,
+                //                     snippets: [{
+                //                         schema: {
+                //                             componentName: 'LowcodeDemo'
+                //                         },
+                //                     }]
+                //                 }],
+                //             })
+                //         },
+                //     };
                 maps[key] = metaData.schema;
             } else {
                 const { view } = config.advanced;
@@ -453,41 +357,50 @@ export default class DesignerPlugin extends PureComponent<any, any> {
     state = {
         componentMetadatas: null,
         library: null,
-        extraEnvironment: null,
-        renderEnv: 'default',
-        device: 'default',
-        locale: '',
-        designMode: 'live',
-        deviceClassName: '',
-        simulatorUrl: null,
-        requestHandlersMap: null,
     };
 
     private _mounted = true;
 
     constructor(props: any) {
         super(props);
+        this.setupAssets();
     }
 
-
+    private async setupAssets() {
+        const editor = this.props.engineEditor;
+        const assets = await editor.onceGot('assets');
+        const { components, packages, extraEnvironment, utils } = assets;
+        const state = {
+            componentMetadatas: components || [],
+            library: packages || [],
+        };
+        this.setState(state);
+    }
     componentWillUnmount() {
         this._mounted = false;
     }
 
     render(): React.ReactNode {
         const editor = this.props.engineEditor;
-        // const {
-        //     componentMetadatas,
-        //     library,
-        // } = this.state;
-
         // if (!library || !componentMetadatas) {
         //     // TODO: use a Loading
         //     return null;
         // }
+        const {
+            componentMetadatas,
+            library,
+        } = this.state;
 
+        if (!library) {
+            // TODO: use a Loading
+            return null;
+        }
         return (
-            <DesignerView className="lowcode-plugin-designer" designer={editor.get('designer')} />
+            <DesignerView className="lowcode-plugin-designer" designer={editor.get('designer')}
+                simulatorProps={{
+                    library
+                }}
+            />
         );
     }
 }

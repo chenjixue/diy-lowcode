@@ -1,79 +1,15 @@
-import React, { createElement, ReactInstance } from 'react';
+import React, { Component, createElement, forwardRef, FunctionComponent, ReactInstance } from 'react';
 import { render as reactRender } from 'react-dom';
 // import { BuiltinSimulatorHost } from '@/core/host/host.tsx';
 import { computed, makeObservable, observable, observe } from "mobx";
 import { createMemoryHistory, MemoryHistory } from 'history';
 import SimulatorRendererView from "@/core/react-simulator-renderer/renderer-view.tsx"
 import { host } from '../host';
-export class DocumentInstance {
-  instancesMap = new Map<string, ReactInstance[]>();
-
-  get schema(): any {
-    return this.document.export(IPublicEnumTransformStage.Render);
-  }
-
-  private disposeFunctions: Array<() => void> = [];
-
-  @observable.ref private _components: any = {};
-
-  @computed get components(): object {
-    // 根据 device 选择不同组件，进行响应式
-    // 更好的做法是，根据 device 选择加载不同的组件资源，甚至是 simulatorUrl
-    return this._components;
-  }
-
-  // context from: utils、constants、history、location、match
-  @observable.ref private _appContext = {};
-
-  @computed get context(): any {
-    return this._appContext;
-  }
-
-  @observable.ref private _designMode = 'design';
-
-  @computed get designMode(): any {
-    return this._designMode;
-  }
-
-  @observable.ref private _requestHandlersMap = null;
-
-  @computed get requestHandlersMap(): any {
-    return this._requestHandlersMap;
-  }
-
-  @observable.ref private _device = 'default';
-
-  @computed get device() {
-    return this._device;
-  }
-
-  @observable.ref private _componentsMap = {};
-
-  @computed get componentsMap(): any {
-    return this._componentsMap;
-  }
-
-  @computed get suspended(): any {
-    return false;
-  }
-
-  @computed get scope(): any {
-    return null;
-  }
-
-  get path(): string {
-    return `/${this.document.fileName}`;
-  }
-
-  get id() {
-    return this.document.id;
-  }
-
-  constructor(readonly container: SimulatorRendererContainer, readonly document: IDocumentModel) {
-    makeObservable(this);
-  }
-}
-export class SimulatorRendererContainer implements BuiltinSimulatorRenderer {
+import { REACT_FORWARD_REF_TYPE } from '@/util/create-content';
+import DocumentInstance from './document-instance';
+import {buildComponents} from "@/util/render-util.ts"
+// dsfsdf
+export class SimulatorRendererContainer  {
   readonly isSimulatorRenderer = true;
   private disposeFunctions: Array<() => void> = [];
   readonly history: MemoryHistory;
@@ -128,18 +64,18 @@ export class SimulatorRendererContainer implements BuiltinSimulatorRenderer {
   constructor() {
     makeObservable(this);
     // this.autoRender = host.autoRender;
-    // this.disposeFunctions.push(host.connect(this, () => {
-    //   // sync layout config
-    //   this._layout = host.project.get('config').layout;
+    this.disposeFunctions.push(host.connect(this, () => {
+      // sync layout config
+      // this._layout = host.project.get('config').layout;
 
-    //   // todo: split with others, not all should recompute
-    //   if (this._libraryMap !== host.libraryMap
-    //     || this._componentsMap !== host.designer.componentsMap) {
-    //     this._libraryMap = host.libraryMap || {};
-    //     this._componentsMap = host.designer.componentsMap;
-    //     // this.buildComponents();
-    //   }
-    // }));
+      // todo: split with others, not all should recompute
+      // if (this._libraryMap !== host.libraryMap
+      //   || this._componentsMap !== host.designer.componentsMap) {
+      this._libraryMap = host.libraryMap || {};
+      this._componentsMap = host.designer.componentsMap;
+      this.buildComponents();
+      // }
+    }));
     const documentInstanceMap = new Map<string, DocumentInstance>();
     let initialEntry = '/';
     let firstRun = true;
@@ -169,7 +105,17 @@ export class SimulatorRendererContainer implements BuiltinSimulatorRenderer {
       docId && host.project.open(docId);
     });
   }
-
+  private buildComponents() {
+    this._components = buildComponents(
+      this._libraryMap,
+      this._componentsMap,
+      () => { } // this.createComponent.bind(this),
+    );
+    // this._components = {
+    //   ...builtinComponents,
+    //   ...this._components,
+    // };
+  }
   // private buildComponents() {
   //   this._components = buildComponents(
   //       this._libraryMap,
@@ -181,7 +127,6 @@ export class SimulatorRendererContainer implements BuiltinSimulatorRenderer {
   //     ...this._components,
   //   };
   // }
-
 
 
 
@@ -267,4 +212,8 @@ export class SimulatorRendererContainer implements BuiltinSimulatorRenderer {
     // host.project.setRendererReady(this);
   }
 }
-export default new SimulatorRendererContainer();
+let SimulatorRendererContainerInstance = new SimulatorRendererContainer();
+(window as any).SimulatorRenderer = SimulatorRendererContainerInstance
+export default SimulatorRendererContainerInstance
+
+// 特别强调该模块的构建依赖挂载在iframe上的Host模块所以禁止在iframe注入前调用该模块不然会被挂载到父亲window上（建议不要在该模块export任何模块防止错误调用）
