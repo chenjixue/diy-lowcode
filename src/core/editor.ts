@@ -87,7 +87,7 @@ export class Editor {
               const components = component.components;
               assets.componentList = assets.componentList?.concat(component.componentList || []);
               if (Array.isArray(components)) {
-                // 将远程url获取到的组件库加载到assets.components
+                // 将远程url获取到的组件描述协议补充到assets.components
                 components.forEach(d => {
                   assets.components = assets.components.concat({
                     npm: {

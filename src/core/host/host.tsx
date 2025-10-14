@@ -94,7 +94,7 @@ export class BuiltinSimulatorHost {
                 defaultEnvironment,
                 AssetLevel.Environment,
             ),
-            // required & use once
+            // 加载渲染schema所需组件库
             assetBundle(libraryAsset, AssetLevel.Library),
             assetBundle(
                 defaultSimulatorUrl,
