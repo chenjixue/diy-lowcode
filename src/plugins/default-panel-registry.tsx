@@ -1,5 +1,5 @@
-import { SettingsPrimaryPane } from "@/componets/settings-primary-pane";
-import DesignerPlugin from "@/core/designer/designer";
+import { SettingsPrimaryPane } from "@/sketeton/component/settings-primary-pane.tsx";
+import DesignerPlugin from "@/designer/designer-view.tsx";
 // 注册默认的面板
 export const defaultPanelRegistry = (editor: any) => {
   const fun = (ctx: any) => {
@@ -13,6 +13,14 @@ export const defaultPanelRegistry = (editor: any) => {
           content: <DesignerPlugin
             engineEditor={editor}
           />,
+        });
+        skeleton.add({
+          area: 'rightArea',
+          name: 'settingsPane',
+          type: 'Panel',
+          content: <SettingsPrimaryPane
+              engineEditor={editor}
+          />
         });
       },
     };

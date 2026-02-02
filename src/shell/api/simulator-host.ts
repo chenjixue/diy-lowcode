@@ -2,7 +2,7 @@
 // import { simulatorHostSymbol, nodeSymbol } from '../symbols';
 import { IPublicApiSimulatorHost, IPublicModelNode, IPublicModelSimulatorRender } from '@alilc/lowcode-types';
 // import { SimulatorRender } from '../model/simulator-render';
-import { BuiltinSimulatorHost } from '@/core/host/host';
+import { BuiltinSimulatorHost } from '@/host/host.tsx';
 import { simulatorHostSymbol } from './symbols';
 
 export class SimulatorHost implements IPublicApiSimulatorHost {

@@ -8,5 +8,5 @@
 //     <App />
 //   </React.StrictMode>,
 // )
-import {init} from "@/core/engine-core"
+import {init} from "@/entry/entry.ts"
 init(document.querySelector('body')!)

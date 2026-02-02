@@ -128,6 +128,10 @@ export function isReactComponent(obj: any): obj is ComponentType<any> {
 
     return Boolean(isReactClass(obj) || typeof obj === 'function' || isForwardRefType(obj) || isMemoType(obj));
 }
+export function isElement(node) {
+    if (!node) return false;
+    return node.nodeType === Node.ELEMENT_NODE;
+}
 export type ESModule = {
     __esModule: true;
     default: any;

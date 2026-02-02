@@ -1,4 +1,4 @@
-import { material, project } from '@/core/engine-core.ts';
+import { material, project } from '@/entry/entry.ts';
 // import { filterPackages } from '@alilc/lowcode-plugin-inject'
 // import { Message, Dialog } from '@alifd/next';
 // import { IPublicTypeProjectSchema, IPublicEnumTransformStage } from '@alilc/lowcode-types';

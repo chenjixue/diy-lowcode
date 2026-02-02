@@ -1,5 +1,5 @@
-import { AssetItem } from "@/core/builtin-simulator/create-simulator";
-import { AssetLevel, AssetLevels, AssetType } from "@/core/types";
+import { AssetItem } from "@/host/create-simulator.ts";
+import { AssetLevel, AssetLevels, AssetType } from "@/types";
 import { load } from "./script";
 export function isCSSUrl(url: string): boolean {
     return /\.css(\?.*)?$/.test(url);
