@@ -9,11 +9,16 @@ export class SettingField {
     private _title?: any;
     private _name?: any;
     @observable.ref private _expanded = true;
+    private _items: Array<any> = [];
 
     get title() {
         return (
             this._title
         );
+    }
+
+    get items(): Array<any> {
+        return this._items;
     }
 
     get name() {
@@ -33,5 +38,17 @@ export class SettingField {
         this._setter = setter;
         this._name = config.name;
         // this.transducer = new Transducer(this, {setter});
+        if (items && items.length > 0) {
+            this.initItems(items, this.settingFieldCollector);
+        }
+    }
+
+    private initItems(
+        items: Array<any>,
+        settingFieldCollector?: any,
+    ) {
+        this._items = items.map((item) => {
+            return new SettingField(this, item, settingFieldCollector);
+        });
     }
 }
