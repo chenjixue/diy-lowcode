@@ -14,15 +14,17 @@ export class Designer {
     readonly editor;
     readonly viewName;
     private props;
+    readonly shellModelFactory;
     @observable.ref private _simulatorProps?: any;
     private selectionDispose: undefined | (() => void);
 
     // @observable.ref private _simulatorComponent: any;
     constructor(props) {
         this.project = new Project(this, undefined,);
-        const {editor} = props;
+        const {editor, shellModelFactory} = props;
+        this.shellModelFactory = shellModelFactory;
         this.editor = editor;
-        this.project.onCurrentDocumentChange(()=>{
+        this.project.onCurrentDocumentChange(() => {
             this.setupSelection();
         })
         this.setupSelection();
@@ -140,12 +142,15 @@ export class Designer {
     get currentSelection() {
         return this.currentDocument?.selection;
     }
+
     get currentDocument() {
         return this.project.currentDocument;
     }
+
     postEvent(event: string, ...args: any[]) {
         this.editor.eventBus.emit(`designer.${event}`, ...args);
     }
+
     setupSelection = () => {
         if (this.selectionDispose) {
             this.selectionDispose();

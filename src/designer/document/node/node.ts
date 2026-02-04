@@ -23,9 +23,11 @@ export default class Node {
         this.props = new Props(this, props, extras);
         this._children = new NodeChildren(this, this.initialChildren(children));
     }
+
     @computed get componentMeta() {
         return this.document.getComponentMeta(this.componentName);
     }
+
     private initialChildren(children: any) {
         if (children == null) {
             return [];
@@ -54,6 +56,10 @@ export default class Node {
      */
     get schema(): any {
         return this.export(IPublicEnumTransformStage.Save);
+    }
+
+    getProp(path: string, createIfNone = true) {
+        return this.props.query(path, createIfNone) || null;
     }
 
     /**

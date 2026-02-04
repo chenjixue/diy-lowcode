@@ -6,6 +6,7 @@ import {Title} from "@/sketeton/component/title";
 import {Editor} from "@/editor/editor.ts";
 import {Selection} from "@/designer/document/selection.ts"
 import {Designer} from "@/designer/designer.ts";
+import {SettingsPane} from "@/sketeton/component/settings-pane/settings-pane.tsx";
 
 export class SettingsMain {
     @observable.ref private _settings?: any;
@@ -90,15 +91,8 @@ export class SettingsPrimaryPane extends Component<any, any> {
                     className="lc-settings-tab-item"
                     title={<Title title={field.title} />}
                     key={field.name}
-                    onClick={
-                        () => {
-                            // editor?.eventBus.emit('skeleton.settingsPane.change', {
-                            //     name: field.name,
-                            //     title: field.title,
-                            // });
-                        }
-                    }
                 >
+                    <SettingsPane target={field} key={field.id} />
                 </Tab.Item>
             )
         })
@@ -116,9 +110,6 @@ export class SettingsPrimaryPane extends Component<any, any> {
                     contentClassName="lc-settings-tabs-content"
                 >
                     {tabs}
-                    {/*<Tab.Item>1</Tab.Item>*/}
-                    {/*<Tab.Item>2</Tab.Item>*/}
-                    {/*<Tab.Item>3</Tab.Item>*/}
                 </Tab>
             </div>
         )

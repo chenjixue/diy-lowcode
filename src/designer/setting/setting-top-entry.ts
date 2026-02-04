@@ -6,6 +6,7 @@ export class SettingTopEntry {
     private _settingFieldMap = {};
     private _componentMeta
     private _items = [];
+    readonly path = [];
     @observable.ref _first
 
     get componentMeta() {
@@ -32,10 +33,8 @@ export class SettingTopEntry {
         this._componentMeta = meta;
     }
 
-    get title() {
-        return (
-            this._title || (typeof this.name === 'number' ? `${intl('Item')} ${this.name}` : this.name)
-        );
+    getPropValue(propName: string | number): any {
+        return this.first?.getProp(propName.toString(), true)?.getValue();
     }
 
     private setupItems() {
