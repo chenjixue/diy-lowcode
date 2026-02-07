@@ -1,0 +1,63 @@
+{
+  "title": "Border",
+  "shadowColor": "shadow color",
+  "blur": "blur",
+  "spread": "spread",
+  "borderType": {
+    "title": "radius",
+    "dataList": [
+      {
+        "value": "fixedBorder",
+        "tips": "fixed border",
+        "icon": "icon-yuanjiaofangkuang"
+      },
+      {
+        "value": "partBorder",
+        "tips": "part border",
+        "icon": "icon-yuanjiao"
+      }
+    ]
+  },
+
+  "shadowType": {
+    "title": "shadow",
+    "dataList": [
+      {
+        "value": "outerShadow",
+        "tips": "outer shadow",
+        "icon": "icon-yinying"
+      },
+      {
+        "value": "insetShadow",
+        "tips": "inset shadow",
+        "icon": "icon-yinying-outside"
+      }
+    ]
+  },
+
+  "borderStyle": {
+    "title": "border style",
+    "dataList": [
+      {
+        "value": "none",
+        "tips": "none",
+        "icon": "icon-close"
+      },
+      {
+        "value": "solid",
+        "tips": "solid",
+        "icon": "icon-shixian"
+      },
+      {
+        "value": "dashed",
+        "tips": "dashed",
+        "icon": "icon-xuxian"
+      },
+      {
+        "value": "dotted",
+        "tips": "dotted",
+        "icon": "icon-dianxian"
+      }
+    ]
+  }
+}

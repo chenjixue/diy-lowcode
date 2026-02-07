@@ -1,3 +1,5 @@
+import {Designer} from "@/designer/designer.ts";
+
 function preprocessMetadata(metadata) {
     if (metadata.configure) {
         if (Array.isArray(metadata.configure)) {

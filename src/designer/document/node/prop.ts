@@ -44,6 +44,53 @@ export default class Prop {
     setupItems() {
         return this.items;
     }
+    @action
+    // get(path: string | number, createIfNone = true): Prop | null {
+    //     const type = this._type;
+    //     if (type !== 'map' && type !== 'list' && type !== 'unset' && !createIfNone) {
+    //         return null;
+    //     }
+    //
+    //     const maps = type === 'map' ? this.maps : null;
+    //     const items = type === 'list' ? this.items : null;
+    //
+    //     let entry = path;
+    //     let nest = '';
+    //     if (typeof path !== 'number') {
+    //         const i = path.indexOf('.');
+    //         if (i > 0) {
+    //             nest = path.slice(i + 1);
+    //             if (nest) {
+    //                 entry = path.slice(0, i);
+    //             }
+    //         }
+    //     }
+    //
+    //     let prop: any;
+    //     if (type === 'list') {
+    //         if (isValidArrayIndex(entry, this.size)) {
+    //             prop = items![entry];
+    //         }
+    //     } else if (type === 'map') {
+    //         prop = maps?.get(entry);
+    //     }
+    //
+    //     if (prop) {
+    //         return nest ? prop.get(nest, createIfNone) : prop;
+    //     }
+    //
+    //     if (createIfNone) {
+    //         prop = new Prop(this, UNSET, entry);
+    //         this.set(entry, prop, true);
+    //         if (nest) {
+    //             return prop.get(nest, true);
+    //         }
+    //
+    //         return prop;
+    //     }
+    //
+    //     return null;
+    // }
     private get items() {
         return runInAction(() => {
             let items: any[] | null = null;

@@ -9,15 +9,16 @@ import {
 } from '@/sketeton/skeleton.ts';
 import {createElement} from "react";
 import EditorInitPlugin from "@/plugins/plugin-editor-init.tsx";
-import {Project} from "@/shell/api/project.ts";
-import {Material} from "@/shell/api/material.ts";
+import {Project} from "@/shell/project.ts";
+import {Material} from "@/shell/material.ts";
 import {componentMetaParser} from "@/plugins/component-meta-parser.ts";
 import {Editor} from "@/editor/editor.ts";
 import {ILowCodePluginContextPrivate, IPublicTypePluginMeta} from "@/types";
 import {Designer} from "@/designer/designer.ts";
 import {Workbench} from "@/sketeton/layouts/workbench.tsx";
 import {registerDefaults} from "@/plugins/register-defaults.ts";
-import {Setters} from "@/editor/setter.ts";
+import {Setters} from "@/editor/setters.ts";
+import {Common} from "@/shell/common.ts";
 
 export interface ILowCodePluginContextApiAssembler {
     assembleApis(
@@ -70,8 +71,11 @@ const project = new Project(innerProject);
 const setters = new Setters();
 editor.set('designer' as any, designer);
 editor.set('setters' as any, setters);
+
 // 页面的核心骨架负责调控一切,也作为LowCodePluginManager对象的核心功能，同时UI也从其身上拿资源去渲染
 const innerSkeleton = new InnerSkeleton();
+
+const common = new Common(editor, innerSkeleton);
 // 被LowCodePluginManager对象使用,LowCodePluginManager对象创建一个context对象调用该方法并创建新的属性添加，他的大多数能力也是通过创建的context进行操作
 const pluginContextApiAssembler: ILowCodePluginContextApiAssembler = {
     assembleApis: (context: ILowCodePluginContextPrivate, pluginName: string, meta: IPublicTypePluginMeta) => {
@@ -95,6 +99,7 @@ await registryInnerPlugin(designer, editor, plugins);
 export {
     material,
     project,
+    common,
     setters,
     hotkey,
 }

@@ -1,7 +1,8 @@
 import {observer} from "mobx-react";
 import {Component} from "react";
 import {SkeletonContext} from "@/sketeton/context/context.ts";
-import {createField} from "@/sketeton/component/settings/settings-pane.tsx";
+import {createField} from "@/sketeton/component/settings-pane/settings-pane.tsx";
+import {isSetterConfig} from "@/util/is-setter-config.ts";
 
 interface SettingFieldViewProps {
     field: any
@@ -33,19 +34,20 @@ export default class SettingFieldView extends Component<SettingFieldViewProps, S
         const {setter} = this.field;
         let setterType: any;
         let setterProps: any;
-        // if(isSetterConfig(setter)){
-        //     setterType = setter.componentName;
-        //     if (setter.props) {
-        //         setterProps = setter.props;
-        //     }
-        // }
-        setterType = 'MixedSetter';
-        setterProps = {
-            setters: [
-                setter,
-                'VariableSetter',
-            ],
-        };
+        if (isSetterConfig(setter)) {
+            setterType = setter.componentName;
+            if (setter.props) {
+                setterProps = setter.props;
+                if (typeof setterProps === 'function') {
+                    setterProps = setterProps(this.field.internalToShellField());
+                }
+            }
+        }
+        if (setterType === 'MixedSetter') {
+            if (Array.isArray(setterProps.setters) && !setterProps.setters.includes('VariableSetter')) {
+                setterProps.setters.push('VariableSetter');
+            }
+        }
         return {
             setterProps,
             setterType
@@ -53,14 +55,16 @@ export default class SettingFieldView extends Component<SettingFieldViewProps, S
     }
 
     render() {
+        const field = this.field
         const {
             setterProps = {},
             setterType,
         } = this.setterInfo;
-        const field = this.field;
         return createField(
             {},
             this.setters?.createSetterContent(setterType, {
+                ...setterProps,
+                field: field.internalToShellField(),
                 key: field.id,
             })
         );
