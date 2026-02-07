@@ -1,5 +1,6 @@
-import { action, makeObservable, observable, runInAction } from "mobx";
-import { IPublicEnumTransformStage } from "../../../types";
+import {action, makeObservable, observable, runInAction} from "mobx";
+import {IPublicEnumTransformStage} from "../../../types";
+
 export const UNSET = Symbol.for('unset');
 // eslint-disable-next-line no-redeclare
 export type UNSET = typeof UNSET;
@@ -12,6 +13,7 @@ export default class Prop {
     @observable.shallow private _items: any = null;
     readonly props;
     readonly owner;
+
     constructor(
         public parent: any,
         value = UNSET,
@@ -28,7 +30,9 @@ export default class Prop {
         }
         this.setupItems();
     }
-    @action setValue(val: any) {
+
+    @action
+    setValue(val: any) {
         this._value = val;
         const t = typeof val;
         if (val == null) {
@@ -40,11 +44,12 @@ export default class Prop {
         }
         this.setupItems();
     }
+
     @action
     setupItems() {
         return this.items;
     }
-    @action
+
     // get(path: string | number, createIfNone = true): Prop | null {
     //     const type = this._type;
     //     if (type !== 'map' && type !== 'list' && type !== 'unset' && !createIfNone) {
@@ -107,7 +112,8 @@ export default class Prop {
                         prop = new Prop(this, data[key], key);
                     }
                     items = items || [];
-                    items.push(prop); maps.set(key, prop);
+                    items.push(prop);
+                    maps.set(key, prop);
                 }
                 this._maps = maps;
             } else {
@@ -118,6 +124,7 @@ export default class Prop {
             return this._items;
         })
     }
+
     export(stage = IPublicEnumTransformStage.Save) {
         const type = this._type;
         if (type === 'unset') {
@@ -130,7 +137,8 @@ export default class Prop {
             if (!this._items) {
                 return this._value;
             }
-            let maps: any; this.items!.forEach((prop, key) => {
+            let maps: any;
+            this.items!.forEach((prop, key) => {
                 if (!prop.isUnset()) {
                     const v = prop.export(stage);
                     if (v != null) {
@@ -142,6 +150,7 @@ export default class Prop {
             return maps;
         }
     }
+
     @action
     isUnset() {
         return this._type === 'unset';
