@@ -6,7 +6,7 @@ import {assetItem} from "@/util/asset.ts";
 import "./host.less"
 import {Designer} from "@/designer/designer.ts";
 import {Project} from "@/project/project";
-import {SimulatorRendererContainer} from "@/react-renderer/renderer.ts";
+import {SimulatorRendererContainer} from "@/simulator-renderer/renderer.ts";
 import {DocumentModel} from "@/designer/document/document-model.ts";
 
 export function assetBundle(assets, level) {
@@ -35,9 +35,9 @@ const defaultSimulatorUrl = (() => {
     // } else {
     //     urls = [`${prefix}/react-simulator-renderer.css`, `${prefix}/react-simulator-renderer.js`];
     // }
-    // "http://localhost:8081/src/react-renderer/renderer.ts"
+    // "http://localhost:8081/src/simulator-renderer/renderer.ts"
     urls = [
-        `${prefix || "src"}/react-renderer/renderer.ts`
+        `${prefix || "src"}/simulator-renderer/renderer.ts`
     ];
     return urls;
 })();

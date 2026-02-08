@@ -81,7 +81,7 @@ export class TitledPanelView extends Component<{ panel: Panel; area?: string }> 
 }
 
 @observer
-class PanelTitle extends Component<{ panel: Panel; className?: string }> {
+export class PanelTitle extends Component<{ panel: Panel; className?: string }> {
     render() {
         const {panel, className} = this.props;
         return (
@@ -98,7 +98,7 @@ class PanelTitle extends Component<{ panel: Panel; className?: string }> {
     }
 }
 
-class PanelOperationRow extends Component<{ panel: Panel }> {
+export class PanelOperationRow extends Component<{ panel: Panel }> {
     constructor(props) {
         super(props);
         makeObservable(this);

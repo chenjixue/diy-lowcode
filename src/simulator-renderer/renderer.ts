@@ -2,7 +2,7 @@ import React, {createElement, ReactInstance} from 'react';
 import {render as reactRender} from 'react-dom';
 // import { BuiltinSimulatorHost } from '@/core/host/host.tsx';
 import {createMemoryHistory, MemoryHistory} from 'history';
-import SimulatorRendererView from "@/react-renderer/renderer-view.tsx"
+import SimulatorRendererView from "@/simulator-renderer/renderer-view.tsx"
 import {host} from '../host';
 import DocumentInstance, {SYMBOL_VDID} from '@/designer/document/document-instance.ts';
 import {buildComponents} from "@/util/render-util.ts"

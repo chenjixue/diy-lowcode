@@ -1,7 +1,7 @@
 import {ReactInstance} from "react";
 import {IPublicEnumTransformStage} from "../../types";
 import {computed, makeObservable, observable} from "mobx";
-import {SimulatorRendererContainer} from "../../react-renderer/renderer.ts";
+import {SimulatorRendererContainer} from "../../simulator-renderer/renderer.ts";
 import {DocumentModel} from "@/designer/document/document-model.ts";
 
 export const SYMBOL_VNID = Symbol('_LCNodeId');

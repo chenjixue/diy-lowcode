@@ -9,7 +9,7 @@ export default defineConfig({
       input: {
         main: path.resolve(__dirname, 'index.html'),
         // iframe通过script注入渲染的renderer渲染器所以需要打包份
-        renderer: path.resolve(__dirname, 'src/react-renderer/renderer.ts'),
+        renderer: path.resolve(__dirname, 'src/simulator-renderer/renderer.ts'),
       }
     }
   },
