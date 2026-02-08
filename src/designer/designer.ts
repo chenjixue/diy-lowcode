@@ -4,8 +4,6 @@ import {SettingTopEntry} from "@/designer/setting/setting-top-entry.ts";
 import {ComponentActions} from "@/designer/component-actions.ts";
 import {ComponentMeta} from "@/designer/component-meta.ts";
 import {IPublicTypeComponentMetadata} from "@/types";
-import {DocumentModel} from "@/designer/document/document-model.ts";
-
 
 export class Designer {
     readonly project: any;
@@ -17,7 +15,6 @@ export class Designer {
     readonly shellModelFactory;
     @observable.ref private _simulatorProps?: any;
     private selectionDispose: undefined | (() => void);
-
     // @observable.ref private _simulatorComponent: any;
     constructor(props) {
         this.project = new Project(this, undefined,);

@@ -1,6 +1,6 @@
 import * as React from 'react';
-import customIcon from '../../../../components/custom-icon';
-export default customIcon;
+// import customIcon from '../../../../components/custom-icon';
+// export default customIcon;
 
 // const ICON_URL = "//at.alicdn.com/t/font_2761185_vbnz9ml8y4r.js";
 

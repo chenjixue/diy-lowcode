@@ -4,12 +4,11 @@ import Number from '../../components/number';
 import { StyleData, onStyleChange } from '../../utils/types';
 import { Collapse, NumberPicker, Select, Range } from '@alifd/next';
 import ColorInput from '../../components/color-input';
-import { intlLocal } from './locale';
 import { addUnit, isEmptyValue } from '../../utils';
 import './index.less';
 const Panel = Collapse.Panel;
 
-const fontConfig = intlLocal();
+const fontConfig = {}
 
 interface fontProps {
   styleData: StyleData | any;

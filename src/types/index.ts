@@ -4328,6 +4328,7 @@ export interface ILowCodePluginContextPrivate {
     set project(project: any);
     set material(material:any);
     set config(config:any);
+    set setters(config:any);
 }
 export interface IPublicModelResource {
     get title(): string | undefined;

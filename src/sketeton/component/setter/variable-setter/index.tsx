@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { event } from '@alilc/lowcode-engine';
+// import { event } from '@/entry/entry.ts';
 import './index.less';
 
 export default class SetterVariable extends PureComponent {
@@ -8,7 +8,7 @@ export default class SetterVariable extends PureComponent {
 
   static show(params: any) {
     const { prop: field, ...res } = params;
-    event.emit('variableBindDialog.openDialog', { field, ...res });
+    // event.emit('variableBindDialog.openDialog', { field, ...res });
   }
 
   render() {

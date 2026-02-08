@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { Select, Balloon } from '@alifd/next';
-import { project } from '@alilc/lowcode-engine';
+import { project } from '@/entry/entry.ts';
 import * as acorn from 'acorn';
 
 import { isJSExpression, generateI18n } from './locale/utils';

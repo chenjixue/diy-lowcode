@@ -1,5 +1,5 @@
 import {SettingTopEntry} from "@/designer/setting/setting-top-entry.ts";
-import {makeObservable, observable} from "mobx";
+import {computed, makeObservable, observable, observe} from "mobx";
 import {SettingPropEntry} from "@/designer/setting/setting-prop-entry.ts";
 
 export class SettingField extends SettingPropEntry {
@@ -9,7 +9,7 @@ export class SettingField extends SettingPropEntry {
     readonly transducer: any;
     private _title?: any;
     @observable.ref private _expanded = true;
-    private _items: Array<any> = [];
+    @observable private _items: Array<any> = [];
 
     get title() {
         return (
@@ -21,7 +21,12 @@ export class SettingField extends SettingPropEntry {
         return this._items;
     }
 
-
+    @computed get setter(){
+        if (!this._setter) {
+            return null;
+        }
+        return this._setter;
+    }
 
     constructor(
         parent: SettingTopEntry,
@@ -36,6 +41,15 @@ export class SettingField extends SettingPropEntry {
         this._title = title;
         this._setter = setter;
         this._name = config.name;
+        // observe(this, "items", change => {
+        //     debugger
+        //     console.log("SettingField.items 变更", change);
+        // });
+
+        // observe(this, change => {
+        //     debugger
+        //     console.log("SettingField.items 内容变化", change);
+        // });
         // this.transducer = new Transducer(this, {setter});
         if (items && items.length > 0) {
             this.initItems(items, this.settingFieldCollector);

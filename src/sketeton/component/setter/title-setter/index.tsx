@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { Switch, Input, Box } from '@alifd/next';
-import { SettingTarget } from '@alilc/lowcode-types';
+// import { SettingTarget } from '@alilc/lowcode-types';
 
-import './index.scss';
+import './index.less';
 
 interface TitleSetterProps {
-  field?: SettingTarget;
-  prop?: SettingTarget;
+  field?: any;
+  prop?: any;
   value: string;
   defaultValue: string;
   defaultChecked?: boolean;

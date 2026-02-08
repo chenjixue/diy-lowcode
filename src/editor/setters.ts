@@ -1,5 +1,6 @@
 import {ReactNode} from "react";
 import {createContent} from "@/util/create-content.ts";
+import {isCustomView} from "@/util/is-custom-view.ts";
 
 export class Setters {
     settersMap = new Map();
@@ -23,6 +24,13 @@ export class Setters {
         }
         if (!setter) {
             return;
+        }
+        if (isCustomView(setter)) {
+            setter = {
+                component: setter,
+                // todo: intl
+                title: (setter as any).displayName || (setter as any).name || 'CustomSetter',
+            };
         }
         this.settersMap.set(typeOrMaps, {type: typeOrMaps, ...setter});
     };

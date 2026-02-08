@@ -1,4 +1,4 @@
-import { Component, Fragment } from 'react';
+import React, { Component, Fragment } from 'react';
 import classNames from 'classnames';
 import { Area } from '@/sketeton/area.ts';
 import { Panel } from '@/sketeton/widget/pane.ts';

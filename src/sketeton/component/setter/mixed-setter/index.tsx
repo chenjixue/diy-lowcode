@@ -6,7 +6,7 @@ import {isSetterConfig} from "@/util/is-setter-config.ts";
 import {observer} from "mobx-react";
 import {common, setters} from "@/entry/entry.ts";
 const {editorCabin} = common;
-const {computed, createSetterContent} = editorCabin;
+const {createSetterContent} = editorCabin;
 
 const {getSetter, getSettersMap} = setters;
 
@@ -164,6 +164,7 @@ export default class MixedSetter extends Component<{
     // set name ,used in setting Transducer
     static displayName = 'MixedSetter';
 
+    private shell;
     // private hasVariableSetter = this.setters.some((item) => item.name === 'VariableSetter');
 
     constructor(props) {

@@ -1,8 +1,6 @@
-import React, { Component } from 'react';
-import { isJSExpression, isJSFunction, isJSSlot } from '@alilc/lowcode-types';
-import { isPlainObject } from './utils';
-import { DatePicker, TimePicker } from '@alifd/next';
-import moment from 'moment';
+import MixedSetter from './mixed-setter';
+import {DatePicker, TimePicker} from '@alifd/next';
+import {isPlainObject} from "@/util/is-plain-object.ts"
 import ExpressionSetter from './expression-setter';
 import ColorSetter from './color-setter';
 import JsonSetter from './json-setter';
@@ -17,7 +15,6 @@ import RadioGroupSetter from './radiogroup-setter';
 import BoolSetter from './bool-setter';
 import NumberSetter from './number-setter';
 import I18nSetter from './i18n-setter';
-import MixedSetter from './mixed-setter';
 import SlotSetter from './slot-setter';
 import TextAreaSetter from './textarea-setter';
 import ArraySetter from './array-setter';
@@ -25,7 +22,9 @@ import ObjectSetter from './object-setter';
 import VariableSetter from './variable-setter';
 import TitleSetter from './title-setter';
 import './index.less';
-import packagesInfo from '../package.json';
+import {isJSExpression} from "@/util/asset.ts";
+import {isJSFunction} from "@/util/is-isfunction.ts";
+import {isJSSlot} from "@/util/is-jsslot.ts";
 // suggest: 做成 StringSetter 的一个参数，
 // export const TextAreaSetter = {
 //   component: TextAreaSetter,
@@ -42,8 +41,7 @@ export const DateYearSetter = DatePicker.YearPicker;
 export const DateMonthSetter = DatePicker.MonthPicker;
 export const DateRangeSetter = DatePicker.RangePicker;
 
-export { ExpressionSetter, EventsSetter, JsonSetter, IconSetter };
-
+// export {ExpressionSetter, EventsSetter, JsonSetter, IconSetter};
 
 const DataExpressionSetter = {
     component: ExpressionSetter,
@@ -52,7 +50,7 @@ const DataExpressionSetter = {
         return isJSExpression(v);
     },
     valueType: ['JSExpression'],
-    defaultProps: { placeholder: '请输入表达式' },
+    defaultProps: {placeholder: '请输入表达式'},
     title: '表达式输入',
     recommend: true,
 };
@@ -197,7 +195,7 @@ const engineExt = {
         // VariableBindDialog,
     },
 };
-window.AliLowCodeEngineExt = engineExt;
+// window.AliLowCodeEngineExt = engineExt;
 export default engineExt;
 
 // registerSetter(builtinSetters);

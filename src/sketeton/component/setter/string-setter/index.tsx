@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Input } from '@alifd/next';
 import './index.less';
-
 interface StringSetterProps {
   isPreview?: boolean;
   hasBorder?: boolean;

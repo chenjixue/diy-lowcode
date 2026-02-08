@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { Radio, Balloon } from '@alifd/next';
 import { RadioItem, StyleData, onStyleChange } from '../../utils/types';
-import Icon from '../icon';
+// import Icon from '../icon';
 import './index.less';
 const RadioGroup = Radio.Group;
 
@@ -115,7 +115,7 @@ export default (props: radioProps) => {
                     onRadioItemClick(styleKey, e.currentTarget.id, value);
                   }}
                 >
-                  {item.icon ? <Icon type={item.icon} size="small"></Icon> : item.title}
+                  {/*{item.icon ? <Icon type={item.icon} size="small"></Icon> : item.title}*/}
                 </Radio>
               }
               triggerType="hover"

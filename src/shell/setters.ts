@@ -17,6 +17,12 @@ export class Setters {
     createSetterContent = (setter: any, props: Record<string, any>): ReactNode => {
         return this[settersSymbol].createSetterContent(setter, props);
     };
+    getSetter = (type: string) => {
+        return this[settersSymbol].getSetter(type);
+    };
+    getSettersMap = () => {
+        return this[settersSymbol].getSettersMap();
+    }
     registerSetter = (
         typeOrMaps: any,
         setter?: any,
