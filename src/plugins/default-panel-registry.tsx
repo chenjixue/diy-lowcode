@@ -1,4 +1,4 @@
-import { SettingsPrimaryPane } from "@/sketeton/component/settings-primary-pane.tsx";
+import { SettingsPrimaryPane } from "@/sketeton/component/settings-pane/settings-primary-pane.tsx";
 import DesignerPlugin from "@/designer/designer-view.tsx";
 // 注册默认的面板
 export const defaultPanelRegistry = (editor: any) => {

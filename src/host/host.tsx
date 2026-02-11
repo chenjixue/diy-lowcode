@@ -8,6 +8,7 @@ import {Designer} from "@/designer/designer.ts";
 import {Project} from "@/project/project";
 import {SimulatorRendererContainer} from "@/react-renderer/renderer.ts";
 import {DocumentModel} from "@/designer/document/document-model.ts";
+import Node from "@/designer/document/node/node.ts"
 
 export function assetBundle(assets, level) {
     if (!assets) {
@@ -70,6 +71,10 @@ export class BuiltinSimulatorHost {
         return this._renderer;
     }
 
+    get currentDocument() {
+        return this.project.currentDocument;
+    }
+
     get contentDocument() {
         return this._contentDocument;
     }
@@ -96,6 +101,22 @@ export class BuiltinSimulatorHost {
 
     setupEvents() {
         this.setupDragAndClick();
+    }
+
+    @observable private instancesMap: {
+        [docId: string]: any;
+    } = {};
+
+    getComponentInstances(node: Node) {
+        const docId = node.document?.id;
+        if (!docId) {
+            return null;
+        }
+
+        const instances = this.instancesMap[docId]?.get(node.id) || null;
+        if (!instances) {
+            return instances;
+        }
     }
 
     getNodeInstanceFromElement(target: Element | null) {

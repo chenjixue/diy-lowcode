@@ -1,6 +1,7 @@
-import { Component, Fragment } from "react";
-import { BuiltinSimulatorHost } from "./host.tsx";
-import { observer } from "mobx-react";
+import {Component, Fragment} from "react";
+import {BuiltinSimulatorHost} from "./host.tsx";
+import {observer} from "mobx-react";
+import {computed} from "mobx";
 
 @observer
 class Content extends Component<{ host: BuiltinSimulatorHost }> {
@@ -53,17 +54,10 @@ class Canvas extends Component<{ host: BuiltinSimulatorHost }> {
     render() {
         const sim = this.props.host;
         let className = 'lc-simulator-canvas';
-        // const { canvas = {}, viewport = {} } = sim.deviceStyle || {};
-        // if (sim.deviceClassName) {
-        //   className += ` ${sim.deviceClassName}`;
-        // } else if (sim.device) {
-        //   className += ` lc-simulator-device-${sim.device}`;
-        // }
-
         return (
             <div className={className}>
                 <div className="lc-simulator-canvas-viewport">
-                    {/* <BemTools host={sim} /> */}
+                    <BemTools host={sim} />
                     <Content host={sim} />
                 </div>
             </div>
@@ -73,7 +67,7 @@ class Canvas extends Component<{ host: BuiltinSimulatorHost }> {
 
 class Layout extends Component {
     render() {
-        const { children } = this.props;
+        const {children} = this.props;
         return <Fragment>{children}</Fragment>;
     }
 }
@@ -83,7 +77,7 @@ export class BuiltinSimulatorHostView extends Component<SimulatorHostProps> {
 
     constructor(props: any) {
         super(props);
-        const { project, onMount, designer } = this.props;
+        const {project, onMount, designer} = this.props;
         this.host = new BuiltinSimulatorHost(project, designer);
         this.host.setProps(this.props);
         // onMount?.(this.host);

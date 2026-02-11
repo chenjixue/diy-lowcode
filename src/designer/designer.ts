@@ -4,8 +4,21 @@ import {SettingTopEntry} from "@/designer/setting/setting-top-entry.ts";
 import {ComponentActions} from "@/designer/component-actions.ts";
 import {ComponentMeta} from "@/designer/component-meta.ts";
 import {IPublicTypeComponentMetadata} from "@/types";
+import Node from "@/designer/document/node/node.ts";
 import {DocumentModel} from "@/designer/document/document-model.ts";
+import {OffsetObserver} from "@/designer/offset-observer.ts";
 
+export interface INodeSelector {
+    node: Node,
+    instance: DocumentModel
+}
+
+export function createOffsetObserver(nodeInstance: INodeSelector) {
+    if (!nodeInstance.instance) {
+        return null;
+    }
+    return new OffsetObserver(nodeInstance);
+}
 
 export class Designer {
     readonly project: any;
@@ -14,15 +27,17 @@ export class Designer {
     readonly editor;
     readonly viewName;
     private props;
+    readonly shellModelFactory;
     @observable.ref private _simulatorProps?: any;
     private selectionDispose: undefined | (() => void);
 
     // @observable.ref private _simulatorComponent: any;
     constructor(props) {
         this.project = new Project(this, undefined,);
-        const {editor} = props;
+        const {editor, shellModelFactory} = props;
+        this.shellModelFactory = shellModelFactory;
         this.editor = editor;
-        this.project.onCurrentDocumentChange(()=>{
+        this.project.onCurrentDocumentChange(() => {
             this.setupSelection();
         })
         this.setupSelection();
@@ -137,15 +152,38 @@ export class Designer {
         return this._simulatorProps || {};
     }
 
+    createOffsetObserver(nodeInstance: INodeSelector) {
+        const oobx = createOffsetObserver(nodeInstance);
+        this.clearOobxList();
+        if (oobx) {
+            this.oobxList.push(oobx);
+        }
+        return oobx;
+    }
+
+    private clearOobxList(force?: boolean) {
+        let l = this.oobxList.length;
+        if (l > 20 || force) {
+            while (l-- > 0) {
+                if (this.oobxList[l].isPurged()) {
+                    this.oobxList.splice(l, 1);
+                }
+            }
+        }
+    }
+
     get currentSelection() {
         return this.currentDocument?.selection;
     }
+
     get currentDocument() {
         return this.project.currentDocument;
     }
+
     postEvent(event: string, ...args: any[]) {
         this.editor.eventBus.emit(`designer.${event}`, ...args);
     }
+
     setupSelection = () => {
         if (this.selectionDispose) {
             this.selectionDispose();

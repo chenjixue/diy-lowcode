@@ -1,11 +1,15 @@
-import {Editor} from "@/editor-core/editor.ts";
 import {SettingField} from "@/designer/setting/setting-field.ts";
 import {computed, observable} from "mobx";
+import {Editor} from "@/editor/editor.ts";
+import {Designer} from "@/designer/designer.ts";
 
 export class SettingTopEntry {
     private _settingFieldMap = {};
     private _componentMeta
     private _items = [];
+    readonly path = [];
+    readonly top = this;
+    readonly designer: Designer | undefined;
     @observable.ref _first
 
     get componentMeta() {
@@ -22,6 +26,7 @@ export class SettingTopEntry {
 
     constructor(readonly editor: Editor, readonly nodes: []) {
         this._first = nodes[0];
+        this.designer = this._first.document?.designer;
         this.setupComponentMeta();
         this.setupItems();
     }
@@ -32,10 +37,8 @@ export class SettingTopEntry {
         this._componentMeta = meta;
     }
 
-    get title() {
-        return (
-            this._title || (typeof this.name === 'number' ? `${intl('Item')} ${this.name}` : this.name)
-        );
+    getPropValue(propName: string | number): any {
+        return this.first?.getProp(propName.toString(), true)?.getValue();
     }
 
     private setupItems() {
