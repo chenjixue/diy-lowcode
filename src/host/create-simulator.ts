@@ -56,9 +56,9 @@ export function createSimulator(
             const lv = asset.level || level || AssetLevel.Environment;
             const scriptType = asset.scriptType ? ` type="${asset.scriptType}"` : '';
             if (asset.type === AssetType.JSUrl) {
-                // react-renderer/renderer.ts
+                // simulator-renderer/renderer.ts
                 // 这个在开发环境是项目自带的render代码，用module去加载
-                if (import.meta.env.MODE === 'development' && asset.content.indexOf("react-renderer/renderer.ts") != -1) {
+                if (import.meta.env.MODE === 'development' && asset.content.indexOf("simulator-renderer/renderer.ts") != -1) {
                     scripts[lv].push(
                         `<script src="${asset.content}"${id}${scriptType} type="module"></script>`,
                     );

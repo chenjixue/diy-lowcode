@@ -2,14 +2,7 @@ import {Component} from "react";
 import {observer} from "mobx-react";
 import {Panel} from "@/sketeton/widget/pane.ts";
 import classNames from "classnames";
-
-function PanelOperationRow(props: { panel: Panel }) {
-    return null;
-}
-
-function DraggableLineView(props: { panel: Panel }) {
-    return null;
-}
+import {PanelOperationRow} from "@/sketeton/component/titled-panel-view.tsx";
 
 @observer
 export class PanelView extends Component<{
@@ -42,7 +35,7 @@ export class PanelView extends Component<{
     // }
 
     render() {
-        const { panel, area, hideOperationRow, hideDragLine } = this.props;
+        const {panel, area, hideOperationRow, hideDragLine} = this.props;
         if (!panel.inited) {
             return null;
         }

@@ -5,6 +5,7 @@ import {NodeChildren} from "./node-children.ts";
 import {Props} from "./props.ts";
 import {SettingTopEntry} from "@/designer/setting/setting-top-entry.ts";
 import {computed} from "mobx";
+import Prop from "@/designer/document/node/prop.ts";
 
 export default class Node {
     readonly id: string;
@@ -23,9 +24,15 @@ export default class Node {
         this.props = new Props(this, props, extras);
         this._children = new NodeChildren(this, this.initialChildren(children));
     }
+
     @computed get componentMeta() {
         return this.document.getComponentMeta(this.componentName);
     }
+
+    getProp(path: string, createIfNone = true): Prop | null {
+        return this.props.query(path, createIfNone) || null;
+    }
+
     private initialChildren(children: any) {
         if (children == null) {
             return [];

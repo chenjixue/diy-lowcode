@@ -1,8 +1,8 @@
-import { Component, Fragment } from 'react';
+import React, { Component, Fragment } from 'react';
 import classNames from 'classnames';
 import { observer } from "mobx-react";
 import { Area } from '@/sketeton/area.ts';
-
+console.log(React,"left--")
 @observer
 export default class LeftArea extends Component<{ area: Area }> {
   render() {
