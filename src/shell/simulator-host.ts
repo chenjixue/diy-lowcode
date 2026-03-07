@@ -3,7 +3,7 @@
 import { IPublicApiSimulatorHost, IPublicModelNode, IPublicModelSimulatorRender } from '@alilc/lowcode-types';
 // import { SimulatorRender } from '../model/simulator-render';
 import { BuiltinSimulatorHost } from '@/host/host.tsx';
-import { simulatorHostSymbol } from './symbols';
+import { simulatorHostSymbol } from './symbols.ts';
 
 export class SimulatorHost implements IPublicApiSimulatorHost {
   private readonly [simulatorHostSymbol]: BuiltinSimulatorHost;

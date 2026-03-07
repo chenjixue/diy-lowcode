@@ -1,4 +1,4 @@
-import {projectSymbol, simulatorHostSymbol} from './symbols';
+import {projectSymbol, simulatorHostSymbol} from './symbols.ts';
 import InnerProject from '@/project/project.ts';
 import {BuiltinSimulatorHost} from "@/host/host.tsx";
 import {IPublicTypeProjectSchema} from "@/types";

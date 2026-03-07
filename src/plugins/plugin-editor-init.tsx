@@ -11,6 +11,7 @@ const EditorInitPlugin = (ctx: IPublicModelPluginContext, options: any) => {
       await material.setAssets(assets);
 
       const schema = await getProjectSchema("");
+      console.log(schema,"schema---");
       // // 加载 schema
       project.importSchema(schema as any);
     },

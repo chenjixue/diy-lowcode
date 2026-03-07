@@ -26,6 +26,12 @@ export function isAssetItem(obj: any): obj is AssetItem {
 export function isAssetBundle(obj: any): obj is AssetBundle {
     return obj && obj.type === AssetType.Bundle;
 }
+export const isJSExpression = (obj = '') => {
+    if (obj && typeof obj === 'object' && obj.type === 'JSExpression') {
+        return true;
+    }
+    return false;
+};
 function parseAsset(scripts: any, styles: any, asset: Asset | undefined | null, level?: AssetLevel) {
     if (!asset) {
         return;

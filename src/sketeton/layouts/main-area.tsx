@@ -3,7 +3,7 @@ import React from 'react';
 import classNames from 'classnames';
 import { Area } from '@/sketeton/area.ts';
 import { observer } from "mobx-react";
-console.log(React,"react--")
+console.log(React,"main--")
 @observer
 export default class MainArea extends Component<{ area: Area<any, Panel | Widget> }> {
   render() {

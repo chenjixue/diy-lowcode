@@ -1,5 +1,5 @@
 import {ComponentType} from 'react';
-import {designerSymbol, editorSymbol} from './symbols';
+import {designerSymbol, editorSymbol} from './symbols.ts';
 import {
     IPublicApiMaterial,
     IPublicModelEditor,
