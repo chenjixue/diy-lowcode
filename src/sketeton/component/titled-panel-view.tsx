@@ -118,6 +118,10 @@ export class PanelOperationRow extends Component<{ panel: Panel }> {
 
     render() {
         const {panel} = this.props;
+        const isRightArea = this.props.panel.config?.area === 'rightArea';
+        if (isRightArea) {
+            return null;
+        }
         const areaName = panel?.parent?.name;
         const area = panel.skeleton[areaName];
         return (
